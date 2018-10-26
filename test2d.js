@@ -15,9 +15,12 @@ var curFrame = 0;
 var curFrameShuriken = 0;
 var leftShuriken = false;
 var velocityShuriken = 0;
+var audioCounter = 0;
 
 var counter = 0;
 
+var audio = new Audio();
+audio.src = "sakura.mp3";
 var shuriken = new Image();
 shuriken.src = "img/shuriken.png";
 var animation = new Image();
@@ -31,6 +34,8 @@ var jumpMidL = new Image();
 jumpMidL.src = "img/jumpMidL.png";
 var jumpMidR = new Image();
 jumpMidR.src = "img/jumpMid.png";
+var playSound = new Image();
+playSound.src = "img/muteSound.png";
 
 //konstruerer objekter med info om sprites som brukes til animasjon
 class spriteAnimationConstructor {
@@ -103,6 +108,27 @@ const midJumpRightSprite = new spriteAnimationConstructor(
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
+// Add click event listener to canvas element
+canvas.addEventListener("click", function(event) {
+  // Button position and dimensions
+  var buttonX = 660;
+  var buttonY = 45;
+  // Control that click event occurred within position of button
+  var rect = canvas.getBoundingClientRect();
+  if (event.x - rect.left > buttonX && event.y - rect.top < buttonY) {
+    // Executes if button was clicked!
+    if (audioCounter % 2 == 0) {
+      audio.play();
+      playSound.src = "img/playSound.png";
+    } else {
+      audio.pause();
+      playSound.src = "img/muteSound.png";
+      audio.currentTime = 0;
+    }
+  }
+  audioCounter++;
+});
+
 //tast ned kode
 function keyDownHandler(e) {
   if (e.keyCode == 39) {
@@ -172,7 +198,6 @@ function updateIndex() {
 
 function updateFrameShuriken() {
   curFrameShuriken = (curFrameShuriken + Math.floor(counter)) % 4;
-  console.log(Math.floor(counter));
   //Calculating the x coordinate for spritesheet
   srcXShuriken =
     curFrameShuriken * (shurikenSprite.spriteWidth / shurikenSprite.frameCount);
@@ -191,6 +216,10 @@ function drawShuriken() {
     shurikenSprite.charWidth,
     shurikenSprite.charWidth
   );
+}
+
+function drawSound() {
+  ctx.drawImage(playSound, 0, 0, 512, 512, 665, 0, 50, 50);
 }
 
 //tegner karakteren ift. bilde, sourcex og y, høyde bredde på bildetklippet, posisjon på kanvas, og karakter h/b
@@ -282,11 +311,11 @@ function draw() {
   findAnimation();
   updateIndex();
   drawChar();
+  drawSound();
   if (throwing == true) {
     posShuriken += velocityShuriken;
     drawShuriken();
   }
   requestAnimationFrame(draw);
 }
-
 draw();
