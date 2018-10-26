@@ -1,12 +1,9 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-var posX = canvas.width / 2;
+var posX = canvas.width / 4;
 var posY = canvas.height - 100;
 var dx = 0;
 var dy = 0;
-var rightPressed = false;
-var leftPressed = false;
-var upPressed = false;
 var maxJumpHeight = posY - 120;
 var doublejump = false;
 var posShuriken;
@@ -16,6 +13,7 @@ var curFrameShuriken = 0;
 var leftShuriken = false;
 var velocityShuriken = 0;
 var audioCounter = 0;
+var friction = 0.9;
 
 var counter = 0;
 
@@ -104,9 +102,6 @@ const midJumpRightSprite = new spriteAnimationConstructor(
   jumpMidR.src
 );
 
-//legger til lyttere til taste nedtrykk og opptrykk
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
 
 // Add click event listener to canvas element
 canvas.addEventListener("click", function(event) {
@@ -129,44 +124,19 @@ canvas.addEventListener("click", function(event) {
   audioCounter++;
 });
 
-//tast ned kode
-function keyDownHandler(e) {
-  if (e.keyCode == 39) {
-    rightPressed = true;
-  } else if (e.keyCode == 37) {
-    leftPressed = true;
-  } else if (e.keyCode == 38) {
-    jump();
-  }
-}
-
-//tast opp kode
-function keyUpHandler(e) {
-  if (e.keyCode == 39) {
-    rightPressed = false;
-  } else if (e.keyCode == 37) {
-    leftPressed = false;
-  } else if (e.keyCode == 68 && throwing == false) {
-    velocityShuriken = 10;
-    throwShuriken();
-  } else if (e.keyCode == 65 && throwing == false) {
-    velocityShuriken = -10;
-    throwShuriken();
-  }
-}
 
 //finner rett animasjon ift. bevegelse, og kjører changeAnimation.
 function findAnimation() {
   if (
-    (!rightPressed && !leftPressed && dy == 0) ||
-    (leftPressed && rightPressed && dy == 0)
+    (!move.right && !move.left && dy == 0) ||
+    (move.left && move.right && dy == 0)
   ) {
     changeAnimation(idleSprite);
-  } else if (leftPressed && posY == canvas.height - 100) {
+  } else if (move.left && posY == canvas.height - 100) {
     changeAnimation(runLeftSprite);
-  } else if (rightPressed && posY == canvas.height - 100) {
+  } else if (move.right && posY == canvas.height - 100) {
     changeAnimation(runRightSprite);
-  } else if (posY < canvas.height - 100 && leftPressed) {
+  } else if (posY < canvas.height - 100 && move.left) {
     changeAnimation(midJumpLeftSprite);
   } else {
     changeAnimation(midJumpRightSprite);
@@ -247,44 +217,37 @@ function throwShuriken() {
   }, 2000);
 }
 
-//kjøres konstant, det som får karakteren til å bevege seg
-function move() {
-  //beveger til venstre
-  if (leftPressed) {
-    dx = -7;
-  }
 
-  //beveger til høyre
-  if (rightPressed) {
-    dx = 7;
-  }
+move = {
+  left:false,
+  right:false,
+  up:false,
+  a:false,
+  d:false,
 
-  //endrer akselerasjonen nedover ved makshøyde
-  if (posY <= maxJumpHeight) {
-    dy = -dy;
-  }
+  keyListener:function(event) {
+    var key_state = (event.type == "keydown")?true:false;
 
-  //ved "landing" av hoppet, hvis bakkenivå og nedoveraks. stopper bevegelse osv.
-  if (dy < 0 && posY >= canvas.height - 100) {
-    dy = 0;
-    posY = canvas.height - 100;
-    doublejump = false;
-    maxJumpHeight = posY - 120;
-  }
+    switch(event.keyCode) {
 
-  //stopper akselerasjon hvis ingen er trykt, begge er trykt, eller hvis veggene av kanvas begrenser.
-  if (
-    (leftPressed && rightPressed) ||
-    (!leftPressed && !rightPressed) ||
-    (leftPressed && posX < 0) ||
-    (rightPressed && posX > canvas.width - charWidth)
-  ) {
-    dx = 0;
-  }
+      case 37:// venstre tast
+        move.left = key_state;
+      break;
+      case 38:// opp tast
+        move.up = key_state;
+      break;
+      case 39:// høyre tast
+        move.right = key_state;
+      break;
+      case 68:// d tast
+        move.d = key_state;
+      break;
+      case 65:// a tast
+        move.a = key_state;
+      break;
 
-  //beveger karakteren med akselerasjon angitt ovenfor
-  posX += dx;
-  posY -= dy;
+    }
+  }
 }
 
 //kjøres bare ved pil opp trykk, endrer variabler.
@@ -302,11 +265,50 @@ function jump() {
   }
 }
 
-//"tegne" funksjonen
+//"tegne"-funksjonen, kjører i loop
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  move();
+
+  if (move.up && dy == 0) {
+    dy += 18;
+  }
+  if (move.left) {
+    dx -= 0.8;
+    changeAnimation(runLeftSprite);
+  }
+  if (move.right) {
+    dx += 0.8;
+    changeAnimation(runRightSprite);
+  }
+
+  if (move.d && throwing == false) {
+    velocityShuriken = 10;
+    throwShuriken();
+  }
+  if (move.a && throwing == false) {
+    velocityShuriken = -10;
+    throwShuriken();
+  }
+
+  // Fysikk for mindre rigide bevegleser
+  dy -= 0.6;    // gravitasjon
+  posX += dx; // akselerasjon x
+  posY -= dy; // akselerasjon y
+  dx *= 0.9;  // friksjon x
+  dy *= 0.9; // friksjon y
+
+  if (posY >= canvas.height - 100) {
+    dy = 0;
+    posY = canvas.height - 100;
+  }
+
+  if (posX >= canvas.width - 50) { // Hacky løsning:
+    posX = canvas.width - 50;     // Endre fra 50 til sprite-bredde
+  } else if (posX <= 0) {
+    posX = 0;
+  }
+
   updateFrameShuriken();
   findAnimation();
   updateIndex();
@@ -318,4 +320,8 @@ function draw() {
   }
   requestAnimationFrame(draw);
 }
+//legger til lyttere til taste nedtrykk og opptrykk
+document.addEventListener("keydown", move.keyListener);
+document.addEventListener("keyup", move.keyListener);
+
 draw();
