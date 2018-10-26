@@ -1,7 +1,7 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-var posX = canvas.width / 2;
-var posY = canvas.height - 100;
+var posX = 390;
+var posY = 63;
 var dx = 0;
 var dy = 0;
 var rightPressed = false;
@@ -16,8 +16,8 @@ var curFrameShuriken = 0;
 var leftShuriken = false;
 var velocityShuriken = 0;
 var audioCounter = 0;
-
 var counter = 0;
+var menuCounter = 0;
 
 var audio = new Audio();
 audio.src = "sakura.mp3";
@@ -36,6 +36,8 @@ var jumpMidR = new Image();
 jumpMidR.src = "img/jumpMid.png";
 var playSound = new Image();
 playSound.src = "img/muteSound.png";
+var menuBackground = new Image();
+menuBackground.src = "img/Ninja.jpg";
 
 //konstruerer objekter med info om sprites som brukes til animasjon
 class spriteAnimationConstructor {
@@ -55,6 +57,19 @@ class spriteAnimationConstructor {
     this.source = source;
   }
 }
+
+class menuBoxConstructor {
+  constructor(leftX, rightX, topY, bottomY) {
+    (this.leftX = leftX),
+      (this.rightX = rightX),
+      (this.topY = topY),
+      (this.bottomY = bottomY);
+  }
+}
+
+const credits = new menuBoxConstructor(240, 367, 167, 194);
+const instructions = new menuBoxConstructor(210, 410, 117, 147);
+const startGame = new menuBoxConstructor(223, 395, 64, 98);
 const shurikenSprite = new spriteAnimationConstructor(
   1493,
   427,
@@ -103,19 +118,28 @@ const midJumpRightSprite = new spriteAnimationConstructor(
   1,
   jumpMidR.src
 );
+const startMenuSprite = new spriteAnimationConstructor(
+  3723,
+  468,
+  40,
+  40,
+  10,
+  runright.src
+);
 
 //legger til lyttere til taste nedtrykk og opptrykk
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 // Add click event listener to canvas element
+
 canvas.addEventListener("click", function(event) {
   // Button position and dimensions
-  var buttonX = 660;
-  var buttonY = 45;
+  var muteX = 660;
+  var muteY = 45;
   // Control that click event occurred within position of button
   var rect = canvas.getBoundingClientRect();
-  if (event.x - rect.left > buttonX && event.y - rect.top < buttonY) {
+  if (event.x - rect.left > muteX && event.y - rect.top < muteY) {
     // Executes if button was clicked!
     if (audioCounter % 2 == 0) {
       audio.play();
@@ -126,7 +150,51 @@ canvas.addEventListener("click", function(event) {
       audio.currentTime = 0;
     }
   }
+  if (
+    event.x - rect.left > startGame.leftX &&
+    event.x - rect.left < startGame.rightX &&
+    event.y - rect.top > startGame.topY &&
+    event.y - rect.top < startGame.bottomY
+  ) {
+    posX = canvas.width / 2;
+    posY = canvas.height - 100;
+    game = true;
+  }
   audioCounter++;
+});
+
+canvas.addEventListener("mousemove", function(event) {
+  // Button position and dimensions
+
+  // Control that mouseover event occurred within position of button
+  var rect = canvas.getBoundingClientRect();
+  if (
+    event.x - rect.left > startGame.leftX &&
+    event.x - rect.left < startGame.rightX &&
+    event.y - rect.top > startGame.topY &&
+    event.y - rect.top < startGame.bottomY &&
+    game == false
+  ) {
+    menuCounter = 0;
+  }
+  if (
+    event.x - rect.left > instructions.leftX &&
+    event.x - rect.left < instructions.rightX &&
+    event.y - rect.top > instructions.topY &&
+    event.y - rect.top < instructions.bottomY &&
+    game == false
+  ) {
+    menuCounter = 1;
+  }
+  if (
+    event.x - rect.left > credits.leftX &&
+    event.x - rect.left < credits.rightX &&
+    event.y - rect.top > credits.topY &&
+    event.y - rect.top < credits.bottomY &&
+    game == false
+  ) {
+    menuCounter = 2;
+  }
 });
 
 //tast ned kode
@@ -135,8 +203,14 @@ function keyDownHandler(e) {
     rightPressed = true;
   } else if (e.keyCode == 37) {
     leftPressed = true;
-  } else if (e.keyCode == 38) {
+  } else if (e.keyCode == 38 && game == true) {
     jump();
+  } else if (e.keyCode == 13 && game == false) {
+    if (menuCounter == 0) {
+      posX = canvas.width / 2;
+      posY = canvas.height - 100;
+      game = true;
+    }
   }
 }
 
@@ -152,6 +226,16 @@ function keyUpHandler(e) {
   } else if (e.keyCode == 65 && throwing == false) {
     velocityShuriken = -10;
     throwShuriken();
+  } else if (e.keyCode == 38 && game == false) {
+    menuCounter--;
+    if (menuCounter == -1) {
+      menuCounter = 2;
+    }
+  } else if (e.keyCode == 40 && game == false) {
+    menuCounter++;
+    if (menuCounter == 3) {
+      menuCounter = 0;
+    }
   }
 }
 
@@ -301,21 +385,46 @@ function jump() {
     maxJumpHeight = posY - 120;
   }
 }
-
+var game = false;
 //"tegne" funksjonen
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  move();
-  updateFrameShuriken();
-  findAnimation();
-  updateIndex();
-  drawChar();
-  drawSound();
-  if (throwing == true) {
-    posShuriken += velocityShuriken;
-    drawShuriken();
+  if (game == true) {
+    move();
+    updateFrameShuriken();
+    findAnimation();
+    updateIndex();
+    drawChar();
+    drawSound();
+    if (throwing == true) {
+      posShuriken += velocityShuriken;
+      drawShuriken();
+    }
+  } else if (game == false) {
+    menu();
   }
   requestAnimationFrame(draw);
 }
 draw();
+
+function menu() {
+  ctx.drawImage(menuBackground, 0, 0, 1453, 1024, 0, 0, 720, 480);
+  ctx.font = "25px Arial";
+  ctx.fillText("START GAME", 230, 90);
+  ctx.fillText("INSTRUCTIONS", 218, 140);
+  ctx.fillText("CREDITS", 252, 190);
+  move();
+  changeAnimation(startMenuSprite);
+  updateIndex();
+  drawChar();
+  if (menuCounter == 0) {
+    posX = 390;
+    posY = 67;
+  } else if (menuCounter == 1) {
+    posX = 406;
+    posY = 110;
+  } else if (menuCounter == 2) {
+    posX = 360;
+    posY = 160;
+  }
+}
