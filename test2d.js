@@ -9,13 +9,14 @@ var leftPressed = false;
 var upPressed = false;
 var maxJumpHeight = posY - 120;
 var doublejump = false;
-var hack = 0;
 var posShuriken;
 var throwing = false;
 var curFrame = 0;
 var curFrameShuriken = 0;
 var leftShuriken = false;
-var ds = 0;
+var velocityShuriken = 0;
+
+var counter = 0;
 
 var shuriken = new Image();
 shuriken.src = "img/shuriken.png";
@@ -120,10 +121,10 @@ function keyUpHandler(e) {
   } else if (e.keyCode == 37) {
     leftPressed = false;
   } else if (e.keyCode == 68 && throwing == false) {
-    ds = 6;
+    velocityShuriken = 10;
     throwShuriken();
   } else if (e.keyCode == 65 && throwing == false) {
-    ds = -6;
+    velocityShuriken = -10;
     throwShuriken();
   }
 }
@@ -135,14 +136,14 @@ function findAnimation() {
     (leftPressed && rightPressed && dy == 0)
   ) {
     changeAnimation(idleSprite);
+  } else if (leftPressed && posY == canvas.height - 100) {
+    changeAnimation(runLeftSprite);
+  } else if (rightPressed && posY == canvas.height - 100) {
+    changeAnimation(runRightSprite);
   } else if (posY < canvas.height - 100 && leftPressed) {
     changeAnimation(midJumpLeftSprite);
-  } else if (posY < canvas.height - 100) {
+  } else {
     changeAnimation(midJumpRightSprite);
-  } else if (leftPressed && posX > 0) {
-    changeAnimation(runLeftSprite);
-  } else if (rightPressed && posX < canvas.width - charWidth) {
-    changeAnimation(runRightSprite);
   }
 }
 
@@ -158,19 +159,21 @@ function changeAnimation(sprite) {
 
 //animasjon shit
 function updateIndex() {
-  hack++;
-  //Updating the frame index
-  if (hack % 5 == 0) {
-    curFrame = ++curFrame % frameCount;
+  counter += 0.4;
+  if (counter == 1.6) {
+    counter = 0;
   }
+  //Updating the frame index of sprite shit
+  curFrame = (curFrame + Math.floor(counter)) % frameCount;
+
+  //Calculating the x coordinate for spritesheet
   srcX = (curFrame * spriteWidth) / frameCount;
 }
 
 function updateFrameShuriken() {
+  curFrameShuriken = (curFrameShuriken + Math.floor(counter)) % 4;
+  console.log(Math.floor(counter));
   //Calculating the x coordinate for spritesheet
-  if (hack % 5 == 0) {
-    curFrameShuriken = ++curFrameShuriken % 4;
-  }
   srcXShuriken =
     curFrameShuriken * (shurikenSprite.spriteWidth / shurikenSprite.frameCount);
 }
@@ -280,7 +283,7 @@ function draw() {
   updateIndex();
   drawChar();
   if (throwing == true) {
-    posShuriken += ds;
+    posShuriken += velocityShuriken;
     drawShuriken();
   }
   requestAnimationFrame(draw);
