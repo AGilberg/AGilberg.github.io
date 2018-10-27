@@ -327,9 +327,10 @@ move = {
         break;
       case 38: // opp tast
         //dobbelhopp, endre linje3 senere for bedre verdi
+        let skyLevel = posY;
         if (upReleased == true) {
           if (doubleJump == false) {
-            dy += 15;
+            dy += 18-(skyLevel/100); // 15
             doubleJump = true;
           }
         }
