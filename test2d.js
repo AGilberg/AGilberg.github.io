@@ -1,7 +1,8 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+var groundLevel = canvas.height - 100;
 var posX = canvas.width / 2;
-var posY = canvas.height - 100;
+var posY = groundLevel;
 var dx = 0;
 var dy = 0;
 var upReleased = false;
@@ -172,7 +173,7 @@ canvas.addEventListener("click", function(event) {
     event.y - rect.top < startGame.bottomY
   ) {
     posX = canvas.width / 2;
-    posY = canvas.height - 100;
+    posY = groundLevel;
     game = true;
   }
 });
@@ -227,7 +228,7 @@ function findAnimation() {
     changeAnimation(runLeftSprite);
   } else if (move.right && posY >= canvas.height - 110) {
     changeAnimation(runRightSprite);
-  } else if (posY < canvas.height - 100 && lastRight == false) {
+  } else if (posY < groundLevel && lastRight == false) {
     changeAnimation(midJumpLeftSprite);
   } else {
     changeAnimation(midJumpRightSprite);
@@ -349,7 +350,7 @@ move = {
         if (game == false) {
           if (menuCounter == 0) {
             posX = canvas.width / 2;
-            posY = canvas.height - 100;
+            posY = groundLevel;
             game = true;
           }
           if (menuCounter == 1) {
@@ -421,9 +422,9 @@ function moveChar() {
   dx *= 0.9; // friksjon x
   dy *= 0.9; // friksjon y
 
-  if (posY >= canvas.height - 100) {
+  if (posY >= groundLevel) {
     dy = 0;
-    posY = canvas.height - 100;
+    posY = groundLevel;
     upReleased = false;
     doubleJump = true;
   }
