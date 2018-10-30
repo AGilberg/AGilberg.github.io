@@ -25,7 +25,6 @@ var lastRight = true;
 var death = false;
 var srcX = 0;
 var srcXShuriken = 0;
-console.log("test");
 
 var audio = new Audio();
 audio.src = "sakura.mp3";
