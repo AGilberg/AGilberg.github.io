@@ -1,31 +1,42 @@
+// Canvas:
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-var posX = canvas.width / 2;
-var posY;
-var groundLevel = canvas.height - 100;
-var dx = 0;
-var dy = 0;
+
+// Karakter:
+var posX = canvas.width / 2; // Posisjon langs x-aksen. Starter på midten.
+var posY; // Posisjon langs y-aksen.
+var dx = 0; // Fartsvektor langs x-aksen.
+var dy = 0; // Fartsvektor langs y-aksen.
+
+// Kontroll:
 var upReleased = false;
-var posShuriken;
+var lastRight = true;
 var throwing = false;
-var curFrame = 0;
-var curFrameShuriken = 0;
+var doubleJump = false;
+var audioCounter = 0;
+
+// Shuriken:
+var posShuriken;
 var leftShuriken = false;
 var velocityShuriken = 0;
-var audioCounter = 0;
-var counter = 0;
-var menuCounter = 0;
-var game = false;
+var curFrameShuriken = 0;
+
+// Meny:
 var menu = true;
 var credits = false;
 var instructions = false;
+var menuCounter = 0;
+
+var curFrame = 0;
+var counter = 0;
+var game = false;
+var groundLevel = canvas.height - 100; // Bakkenivå
 var friction = 0.9;
-var doubleJump = false;
-var lastRight = true;
 var death = false;
 var srcX = 0;
 var srcXShuriken = 0;
 
+// Audio og sprites/grafikk:
 var audio = new Audio();
 audio.src = "sakura.mp3";
 var shuriken = new Image();
