@@ -55,6 +55,7 @@ var imageBack = new Image();
 imageBack.src = "img/back.jpg";
 var deathAnimation = new Image();
 deathAnimation.src = "img/dead.png";
+
 //Class with objects containing information of sprites, and functions to draw them
 class SpriteAnimationConstructor {
   constructor(
@@ -373,6 +374,7 @@ function drawSound() {
 function drawBackButton() {
   ctx.drawImage(imageBack, 0, 0, 512, 512, 9, 5, 40, 40);
 }
+
 //enemytest
 function drawEnemy() {
   //enemytest
