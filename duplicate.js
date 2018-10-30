@@ -23,8 +23,6 @@ var friction = 0.9;
 var doubleJump = false;
 var lastRight = true;
 var death = false;
-var srcX = 0;
-var srcXShuriken = 0;
 
 var audio = new Audio();
 audio.src = "sakura.mp3";
@@ -35,10 +33,10 @@ var idle = new Image();
 idle.src = "img/idle.png";
 var idleL = new Image();
 idleL.src = "img/idleL.png";
-var runLeft = new Image();
-runLeft.src = "img/runLeft.png";
-var runRight = new Image();
-runRight.src = "img/runRight.png";
+var runleft = new Image();
+runleft.src = "img/runleft.png";
+var runright = new Image();
+runright.src = "img/runright.png";
 var jumpMidL = new Image();
 jumpMidL.src = "img/jumpMidL.png";
 var jumpMidR = new Image();
@@ -56,8 +54,8 @@ imageBack.src = "img/back.jpg";
 var deathAnimation = new Image();
 deathAnimation.src = "img/dead.png";
 
-//Class with objects containing information of sprites, and functions to draw them
-class SpriteAnimationConstructor {
+//konstruerer objekter med info om sprites som brukes til animasjon
+class spriteAnimationConstructor {
   constructor(
     spriteWidth,
     spriteHeight,
@@ -74,65 +72,7 @@ class SpriteAnimationConstructor {
     this.source = source;
   }
 
-  //animate main character at posx and posy with information depending on sprite used.
-  animateMainChar() {
-    ctx.drawImage(
-      this.source,
-      this.updateIndex(),
-      0,
-      this.spriteWidth / this.frameCount,
-      this.spriteHeight,
-      posX,
-      posY,
-      this.charWidth,
-      this.charHeight
-    );
-  }
-  //returns which sprite from mainChar spritesheet to use
-  updateIndex() {
-    if (counter == 3 && death == false) {
-      curFrame = (curFrame + 1) % this.frameCount;
-      counter = 0;
-    } else if (counter == 10 && death == true) {
-      curFrame = (curFrame + 1) % this.frameCount;
-      counter = 0;
-    } else {
-      if (death == false || curFrame <= 8) {
-        counter++;
-      }
-    }
-
-    //Calculating the x coordinate for spritesheet
-    return (curFrame * this.spriteWidth) / this.frameCount;
-  }
-
-  //Draw shuriken if throwing == true
-  drawShuriken() {
-    if (throwing == true) {
-      posShuriken += velocityShuriken;
-      ctx.drawImage(
-        shuriken,
-        this.updateFrameShuriken(),
-        0,
-        shurikenSprite.spriteWidth / shurikenSprite.frameCount,
-        shurikenSprite.spriteHeight,
-        posShuriken,
-        posYShuriken,
-        shurikenSprite.charWidth,
-        shurikenSprite.charWidth
-      );
-    }
-  }
-  //returns which sprite from shuriken spritesheet to use
-  updateFrameShuriken() {
-    if (counter == 1) {
-      curFrameShuriken = (curFrameShuriken + 1) % 4;
-    }
-    //Calculating the x coordinate for spritesheet
-    return (srcXShuriken =
-      curFrameShuriken *
-      (shurikenSprite.spriteWidth / shurikenSprite.frameCount));
-  }
+  animate() {}
 }
 
 class menuBoxConstructor {
@@ -144,85 +84,91 @@ class menuBoxConstructor {
   }
 }
 //enemytest
-const enemySprite = new SpriteAnimationConstructor(
+const enemySprite = new spriteAnimationConstructor(
   3723,
   468,
   60,
   75,
   10,
-  runRight
+  runright.src
 );
 
 const creditsBox = new menuBoxConstructor(240, 367, 167, 194);
 const instructionsBox = new menuBoxConstructor(210, 410, 117, 147);
 const startGame = new menuBoxConstructor(223, 395, 64, 98);
 const backButton = new menuBoxConstructor(0, 50, 0, 50);
-const deathAnimationSprite = new SpriteAnimationConstructor(
+const deathAnimationSprite = new spriteAnimationConstructor(
   4920,
   508,
   80,
   80,
   10,
-  deathAnimation
+  deathAnimation.src
 );
-const shurikenSprite = new SpriteAnimationConstructor(
+const shurikenSprite = new spriteAnimationConstructor(
   1493,
   427,
   30,
   30,
   4,
-  shuriken
+  shuriken.src
 );
-const idleSprite = new SpriteAnimationConstructor(2420, 449, 40, 75, 10, idle);
-const idleLSprite = new SpriteAnimationConstructor(
+const idleSprite = new spriteAnimationConstructor(
   2420,
   449,
   40,
   75,
   10,
-  idleL
+  idle.src
 );
-const runLeftSprite = new SpriteAnimationConstructor(
+const idleLSprite = new spriteAnimationConstructor(
+  2420,
+  449,
+  40,
+  75,
+  10,
+  idleL.src
+);
+const runLeftSprite = new spriteAnimationConstructor(
   3723,
   468,
   60,
   75,
   10,
-  runLeft
+  runleft.src
 );
-const runRightSprite = new SpriteAnimationConstructor(
+const runRightSprite = new spriteAnimationConstructor(
   3723,
   468,
   60,
   75,
   10,
-  runRight
+  runright.src
 );
-const midJumpLeftSprite = new SpriteAnimationConstructor(
+const midJumpLeftSprite = new spriteAnimationConstructor(
   362,
   483,
   55,
   75,
   1,
-  jumpMidL
+  jumpMidL.src
 );
-const midJumpRightSprite = new SpriteAnimationConstructor(
+const midJumpRightSprite = new spriteAnimationConstructor(
   362,
   483,
   55,
   75,
   1,
-  jumpMidR
+  jumpMidR.src
 );
-const startMenuSprite = new SpriteAnimationConstructor(
+const startMenuSprite = new spriteAnimationConstructor(
   3723,
   468,
   40,
   40,
   10,
-  runRight
+  runright.src
 );
-
 //enemytest antall fiender man kan ha samtidig.
 const enemiesContainer = {
   samurai: {
@@ -346,25 +292,88 @@ canvas.addEventListener("mousemove", function(event) {
 //finner rett animasjon ift. bevegelse, og kjører changeAnimation.
 function findAnimation() {
   if (death == true) {
-    deathAnimationSprite.animateMainChar();
+    changeAnimation(deathAnimationSprite);
   } else if (
     (!move.left && !move.right && dy == 0 && lastRight == true) ||
     (move.left && move.right && dy == 0 && lastRight == true)
   ) {
-    idleSprite.animateMainChar();
+    changeAnimation(idleSprite);
   } else if (
     (!move.left && !move.right && dy == 0 && lastRight == false) ||
     (move.left && move.right && dy == 0 && lastRight == false)
   ) {
-    idleLSprite.animateMainChar();
+    changeAnimation(idleLSprite);
   } else if (move.left && posY >= groundLevel) {
-    runLeftSprite.animateMainChar();
+    changeAnimation(runLeftSprite);
   } else if (move.right && posY >= groundLevel) {
-    runRightSprite.animateMainChar();
+    changeAnimation(runRightSprite);
   } else if (posY < groundLevel && lastRight == false) {
-    midJumpLeftSprite.animateMainChar();
+    changeAnimation(midJumpLeftSprite);
   } else {
-    midJumpRightSprite.animateMainChar();
+    changeAnimation(midJumpRightSprite);
+  }
+}
+
+//endrer variablene som blir brukt for å endre animasjon, tilhørende animasjonstypen som blir kalt inn i funksjonen.
+function changeAnimation(sprite) {
+  animation.src = sprite.source;
+  spriteWidth = sprite.spriteWidth;
+  spriteHeight = sprite.spriteHeight;
+  frameCount = sprite.frameCount;
+  charWidth = sprite.charWidth;
+  charHeight = sprite.charHeight;
+}
+
+//animasjon shit
+function updateIndex() {
+  if (death == false) {
+    counter += 0.4;
+    if (counter == 1.6) {
+      counter = 0;
+    }
+  }
+  if (death == true) {
+    if (curFrame <= 8) {
+      counter += 0.1;
+    } else {
+      counter = 0;
+    }
+
+    if (counter >= 1.1) {
+      counter = 0;
+    }
+  }
+  //Updating the frame index of sprite shit
+  curFrame = (curFrame + Math.floor(counter)) % frameCount;
+
+  //Calculating the x coordinate for spritesheet
+  srcX = (curFrame * spriteWidth) / frameCount;
+  //enemytest
+  srcXenemies = (curFrame * enemySprite.spriteWidth) / enemySprite.frameCount;
+}
+
+function updateFrameShuriken() {
+  curFrameShuriken = (curFrameShuriken + Math.floor(counter)) % 4;
+  //Calculating the x coordinate for spritesheet
+  srcXShuriken =
+    curFrameShuriken * (shurikenSprite.spriteWidth / shurikenSprite.frameCount);
+}
+
+//tregner shuriken man kaster
+function drawShuriken() {
+  if (throwing == true) {
+    posShuriken += velocityShuriken;
+    ctx.drawImage(
+      shuriken,
+      srcXShuriken,
+      0,
+      shurikenSprite.spriteWidth / shurikenSprite.frameCount,
+      shurikenSprite.spriteHeight,
+      posShuriken,
+      posYShuriken,
+      shurikenSprite.charWidth,
+      shurikenSprite.charWidth
+    );
   }
 }
 
@@ -376,10 +385,8 @@ function drawBackButton() {
 }
 //enemytest
 function drawEnemy() {
-  //enemytest
-  srcXenemies = (curFrame * enemySprite.spriteWidth) / enemySprite.frameCount;
   ctx.drawImage(
-    runRight,
+    runright,
     srcXenemies,
     0,
     enemySprite.spriteWidth / enemySprite.frameCount,
@@ -388,6 +395,21 @@ function drawEnemy() {
     groundLevel,
     50,
     50
+  );
+}
+
+//tegner karakteren ift. bilde, sourcex og y, høyde bredde på bildetklippet, posisjon på kanvas, og karakter h/b
+function drawChar() {
+  ctx.drawImage(
+    animation,
+    srcX,
+    0,
+    spriteWidth / frameCount,
+    spriteHeight,
+    posX,
+    posY,
+    charWidth,
+    charHeight
   );
 }
 
@@ -496,7 +518,6 @@ function moveChar() {
       if (dy == 0) {
         dy += 18;
         doubleJump = false;
-        curFrame = 0;
       }
     }
 
@@ -542,20 +563,22 @@ function moveChar() {
 //"tegne" funksjonen
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // testmath = Math.floor(Math.random() * 400); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
-  // if (testmath == 46 && enemiesContainer.test1 == false) {
-  //   enemiesContainer.test1 = true;
-  // }
+  testmath = Math.floor(Math.random() * 400); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
+  if (testmath == 46 && enemiesContainer.test1 == false) {
+    enemiesContainer.test1 = true;
+  }
   if (game == true) {
+    updateFrameShuriken();
     findAnimation();
     drawSound();
     drawBackButton();
-    shurikenSprite.drawShuriken();
+    drawShuriken();
     moveChar();
+    drawEnemy();
   }
   if (menu == true) {
     menuDraw();
-    startMenuSprite.animateMainChar();
+    changeAnimation(startMenuSprite);
   }
   if (instructions == true) {
     instructionsDraw();
@@ -565,7 +588,10 @@ function draw() {
     creditsDraw();
     drawBackButton();
   }
-
+  if (game == true || menu == true) {
+    updateIndex();
+    drawChar();
+  }
   requestAnimationFrame(draw);
 }
 
@@ -606,4 +632,5 @@ function creditsDraw() {
 document.addEventListener("keydown", move.keyListener);
 document.addEventListener("keyup", move.keyListener);
 document.addEventListener("keyup", moveMenu.keyListener);
+console.log(enemySprite);
 draw();
