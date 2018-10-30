@@ -55,7 +55,7 @@ var imageBack = new Image();
 imageBack.src = "img/back.jpg";
 var deathAnimation = new Image();
 deathAnimation.src = "img/dead.png";
-
+console.log("test");
 //Class with objects containing information of sprites, and functions to draw them
 class SpriteAnimationConstructor {
   constructor(
