@@ -133,6 +133,22 @@ class SpriteAnimationConstructor {
       curFrameShuriken *
       (shurikenSprite.spriteWidth / shurikenSprite.frameCount));
   }
+  //enemytest
+  drawEnemy() {
+    //enemytest
+    srcXenemies = (curFrame * enemySprite.spriteWidth) / enemySprite.frameCount;
+    ctx.drawImage(
+      runRight,
+      srcXenemies,
+      0,
+      enemySprite.spriteWidth / enemySprite.frameCount,
+      spriteHeight,
+      0,
+      groundLevel,
+      50,
+      50
+    );
+  }
 }
 
 class menuBoxConstructor {
@@ -373,23 +389,6 @@ function drawSound() {
 }
 function drawBackButton() {
   ctx.drawImage(imageBack, 0, 0, 512, 512, 9, 5, 40, 40);
-}
-
-//enemytest
-function drawEnemy() {
-  //enemytest
-  srcXenemies = (curFrame * enemySprite.spriteWidth) / enemySprite.frameCount;
-  ctx.drawImage(
-    runRight,
-    srcXenemies,
-    0,
-    enemySprite.spriteWidth / enemySprite.frameCount,
-    spriteHeight,
-    0,
-    groundLevel,
-    50,
-    50
-  );
 }
 
 //setter startposisjon til shuriken, samt gjør den true slik at den kjøres i draw()
