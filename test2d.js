@@ -7,7 +7,9 @@ var posX = canvas.width / 2; // Posisjon langs x-aksen. Starter på midten.
 var posY; // Posisjon langs y-aksen.
 var dx = 0; // Fartsvektor langs x-aksen.
 var dy = 0; // Fartsvektor langs y-aksen.
-var groundLevel = canvas.height - 100; // Bakkenivå
+var groundLevel = canvas.height - 190; // Bakkenivå
+var friction = 0.9;
+var gravity = 0.6;
 
 // Kontroll:
 var upReleased = false;
@@ -44,8 +46,6 @@ var game = false;
 var menuCounter = 0;
 var curFrame = 0;
 var counter = 0;
-var friction = 0.9;
-var gravity = 0.6;
 var srcX = 0;
 
 // Audio og sprites/grafikk:
