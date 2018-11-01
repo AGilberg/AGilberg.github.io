@@ -10,6 +10,7 @@ var posShuriken;
 var throwing = false;
 var curFrame = 0;
 var curFrameShuriken = 0;
+var curFrameEnemy = 0;
 var leftShuriken = false;
 var velocityShuriken = 0;
 var audioCounter = 0;
@@ -25,6 +26,11 @@ var lastRight = true;
 var death = false;
 var srcX = 0;
 var srcXShuriken = 0;
+var posXenemies = [];
+var posXenemiesLeft = [];
+var posYenemies = [];
+var dxEnemies = 2;
+var score = 0;
 
 var audio = new Audio();
 audio.src = "sakura.mp3";
@@ -55,6 +61,10 @@ var imageBack = new Image();
 imageBack.src = "img/back.jpg";
 var deathAnimation = new Image();
 deathAnimation.src = "img/dead.png";
+var enemyRight = new Image();
+enemyRight.src = "img/enemyRight.png";
+var enemyLeft = new Image();
+enemyLeft.src = "img/enemyLeft.png";
 
 //Class with objects containing information of sprites, and functions to draw them
 class SpriteAnimationConstructor {
@@ -110,6 +120,11 @@ class SpriteAnimationConstructor {
   drawShuriken() {
     if (throwing == true) {
       posShuriken += velocityShuriken;
+      if (posShuriken < 0) {
+        throwing = false;
+      } else if (posShuriken > 720) {
+        throwing = false;
+      }
       ctx.drawImage(
         shuriken,
         this.updateFrameShuriken(),
@@ -135,19 +150,88 @@ class SpriteAnimationConstructor {
   }
   //enemytest
   drawEnemy() {
-    //enemytest
-    srcXenemies = (curFrame * enemySprite.spriteWidth) / enemySprite.frameCount;
-    ctx.drawImage(
-      runRight,
-      srcXenemies,
-      0,
-      enemySprite.spriteWidth / enemySprite.frameCount,
-      spriteHeight,
-      0,
-      groundLevel,
-      50,
-      50
-    );
+    var testmath = Math.floor(Math.random() * 2000); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
+    if (counter == 1) {
+      curFrameEnemy = (curFrameEnemy + 1) % 10;
+    }
+    var srcXenemies =
+      (curFrameEnemy * enemySprite.spriteWidth) / enemySprite.frameCount;
+    for (var arrays in enemiesContainer.samuraiRight) {
+      if (
+        testmath == 46 + parseInt(arrays) &&
+        enemiesContainer.samuraiRight[arrays] == false
+      ) {
+        enemiesContainer.samuraiRight[arrays] = true;
+        posXenemies[arrays] = -140;
+        posYenemies = groundLevel;
+      }
+      if (enemiesContainer.samuraiRight[arrays] == true) {
+        posXenemies[arrays] += dxEnemies;
+        if (posXenemies[arrays] > 720) {
+          enemiesContainer.samuraiRight[arrays] = false;
+        }
+        if (
+          posXenemies[arrays] + 85 < posShuriken &&
+          posXenemies[arrays] + 105 > posShuriken &&
+          throwing == true &&
+          posYShuriken > 340
+        ) {
+          enemiesContainer.samuraiRight[arrays] = false;
+          throwing = false;
+          score++;
+        }
+
+        ctx.drawImage(
+          enemyRight,
+          srcXenemies,
+          0,
+          this.spriteWidth / this.frameCount,
+          this.spriteHeight,
+          posXenemies[arrays],
+          posYenemies,
+          this.charWidth,
+          this.charHeight
+        );
+      }
+    }
+    for (var arrays in enemiesContainer.samuraiRight) {
+      if (
+        testmath == 54 + parseInt(arrays) &&
+        enemiesContainer.samuraiLeft[arrays] == false
+      ) {
+        enemiesContainer.samuraiLeft[arrays] = true;
+        posXenemiesLeft[arrays] = 720;
+        posYenemies = groundLevel;
+      }
+      if (enemiesContainer.samuraiLeft[arrays] == true) {
+        posXenemiesLeft[arrays] -= dxEnemies;
+        if (posXenemiesLeft[arrays] < -140) {
+          enemiesContainer.samuraiLeft[arrays] = false;
+        }
+        if (
+          posXenemiesLeft[arrays] + 15 < posShuriken &&
+          posXenemiesLeft[arrays] + 35 > posShuriken &&
+          throwing == true &&
+          posYShuriken > 340
+        ) {
+          enemiesContainer.samuraiLeft[arrays] = false;
+          throwing = false;
+          score++;
+        }
+
+        ctx.drawImage(
+          enemyLeft,
+          srcXenemies,
+          0,
+          this.spriteWidth / this.frameCount,
+          this.spriteHeight,
+          posXenemiesLeft[arrays],
+          posYenemies,
+          this.charWidth,
+          this.charHeight
+        );
+      }
+    }
   }
 }
 
@@ -159,20 +243,19 @@ class menuBoxConstructor {
       (this.bottomY = bottomY);
   }
 }
-//enemytest
-const enemySprite = new SpriteAnimationConstructor(
-  3723,
-  468,
-  60,
-  75,
-  10,
-  runRight
-);
 
 const creditsBox = new menuBoxConstructor(240, 367, 167, 194);
 const instructionsBox = new menuBoxConstructor(210, 410, 117, 147);
 const startGame = new menuBoxConstructor(223, 395, 64, 98);
 const backButton = new menuBoxConstructor(0, 50, 0, 50);
+const enemySprite = new SpriteAnimationConstructor(
+  5220,
+  255,
+  180,
+  80,
+  10,
+  enemyRight
+);
 const deathAnimationSprite = new SpriteAnimationConstructor(
   4920,
   508,
@@ -241,20 +324,9 @@ const startMenuSprite = new SpriteAnimationConstructor(
 
 //enemytest antall fiender man kan ha samtidig.
 const enemiesContainer = {
-  samurai: {
-    test1: false,
-    test2: false,
-    test3: false,
-    test4: false
-  },
-  ninja: {
-    test1: false,
-    test2: false,
-    test3: false,
-    test4: false
-  }
+  samuraiLeft: [false, false, false, false, false, false],
+  samuraiRight: [false, false, false, false, false, false]
 };
-
 // Add click event listener to canvas element
 canvas.addEventListener("click", function(event) {
   // Button position and dimensions
@@ -396,9 +468,6 @@ function throwShuriken() {
   posShuriken = posX;
   posYShuriken = posY + 20;
   throwing = true;
-  setTimeout(function() {
-    throwing = false;
-  }, 1170);
 }
 
 move = {
@@ -542,16 +611,14 @@ function moveChar() {
 //"tegne" funksjonen
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // testmath = Math.floor(Math.random() * 400); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
-  // if (testmath == 46 && enemiesContainer.test1 == false) {
-  //   enemiesContainer.test1 = true;
-  // }
   if (game == true) {
     findAnimation();
     drawSound();
     drawBackButton();
     shurikenSprite.drawShuriken();
+    enemySprite.drawEnemy();
     moveChar();
+    ctx.fillText("You have defeated " + score + " samurai", 180, 90);
   }
   if (menu == true) {
     menuDraw();
