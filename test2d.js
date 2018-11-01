@@ -27,6 +27,10 @@ var dxEnemies = 2;
 var score = 0;
 var posShuriken;
 
+// Shuriken:
+var posShuriken;
+var curFrameShuriken = 0;
+
 // Meny:
 var menu = true;
 var credits = false;
@@ -34,6 +38,7 @@ var instructions = false;
 var menuCounter = 0;
 var game = false;
 
+var menuCounter = 0;
 var curFrame = 0;
 var counter = 0;
 var friction = 0.9;
