@@ -100,7 +100,6 @@ class SpriteAnimationConstructor {
     this.frameCount = frameCount;
     this.source = source;
   }
-
   //animate main character at posx and posy with information depending on sprite used.
   animateMainChar() {
     ctx.drawImage(
