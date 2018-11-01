@@ -14,22 +14,25 @@ var upReleased = false;
 var lastRight = true;
 var throwing = false;
 var curFrameEnemy = 0;
-var leftShuriken = false;
-var velocityShuriken = 0;
 var curFrameShuriken = 0;
 var doubleJump = false;
 var audioCounter = 0;
 var death = false;
+var score = 0;
+
+// Enemies:
 var posXenemies = [];
 var posXenemiesLeft = [];
 var posYenemies = [];
 var dxEnemies = 2;
-var score = 0;
-var posShuriken;
 
 // Shuriken:
 var posShuriken;
 var curFrameShuriken = 0;
+var posShuriken;
+var leftShuriken = false;
+var srcXShuriken = 0;
+var velocityShuriken = 0;
 
 // Meny:
 var menu = true;
@@ -42,8 +45,8 @@ var menuCounter = 0;
 var curFrame = 0;
 var counter = 0;
 var friction = 0.9;
+var gravity = 0.6;
 var srcX = 0;
-var srcXShuriken = 0;
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
@@ -602,11 +605,11 @@ function moveChar() {
     }
   }
   // Fysikk for mindre rigide bevegleser
-  dy -= 0.6; // gravitasjon
+  dy -= gravity; // gravitasjon
   posX += dx; // akselerasjon x
   posY -= dy; // akselerasjon y
-  dx *= 0.9; // friksjon x
-  dy *= 0.9; // friksjon y
+  dx *= friction; // friksjon x
+  dy *= friction; // friksjon y
 
   if (posY >= groundLevel) {
     dy = 0;
