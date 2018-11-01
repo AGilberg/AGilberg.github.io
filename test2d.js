@@ -491,7 +491,6 @@ move = {
   left: false,
   right: false,
   up: false,
-  a: false,
   d: false,
 
   keyListener: function(event) {
@@ -518,9 +517,6 @@ move = {
         break;
       case 68: // d tast
         move.d = key_state;
-        break;
-      case 65: // a tast
-        move.a = key_state;
         break;
       case 13:
         if (game == false) {
@@ -596,14 +592,15 @@ function moveChar() {
     }
 
     if (move.d && throwing == false) {
-      velocityShuriken = 10;
-      throwShuriken();
-    }
-    if (move.a && throwing == false) {
-      velocityShuriken = -10;
+      if (lastRight) {
+        velocityShuriken = 10;
+      } else {
+        velocityShuriken = -10;
+      }
       throwShuriken();
     }
   }
+
   // Fysikk for mindre rigide bevegleser
   dy -= gravity; // gravitasjon
   posX += dx; // akselerasjon x
