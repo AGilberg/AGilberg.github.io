@@ -7,6 +7,7 @@ var posX = canvas.width / 2; // Posisjon langs x-aksen. Starter på midten.
 var posY; // Posisjon langs y-aksen.
 var dx = 0; // Fartsvektor langs x-aksen.
 var dy = 0; // Fartsvektor langs y-aksen.
+var groundLevel = canvas.height - 100; // Bakkenivå
 
 // Kontroll:
 var upReleased = false;
@@ -18,26 +19,26 @@ var velocityShuriken = 0;
 var curFrameShuriken = 0;
 var doubleJump = false;
 var audioCounter = 0;
+var death = false;
+var posXenemies = [];
+var posXenemiesLeft = [];
+var posYenemies = [];
+var dxEnemies = 2;
+var score = 0;
+var posShuriken;
 
 // Meny:
 var menu = true;
 var credits = false;
 var instructions = false;
 var menuCounter = 0;
+var game = false;
 
 var curFrame = 0;
 var counter = 0;
-var game = false;
-var groundLevel = canvas.height - 100; // Bakkenivå
 var friction = 0.9;
-var death = false;
 var srcX = 0;
 var srcXShuriken = 0;
-var posXenemies = [];
-var posXenemiesLeft = [];
-var posYenemies = [];
-var dxEnemies = 2;
-var score = 0;
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
