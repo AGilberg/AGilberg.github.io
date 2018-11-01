@@ -165,14 +165,18 @@ class SpriteAnimationConstructor {
       curFrameShuriken *
       (shurikenSprite.spriteWidth / shurikenSprite.frameCount));
   }
-  //enemytest
-  drawEnemy() {
+
+  chooseEnemy() {
     var testmath = Math.floor(Math.random() * 2000); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
     if (counter == 1) {
       curFrameEnemy = (curFrameEnemy + 1) % 10;
     }
     var srcXenemies =
       (curFrameEnemy * enemySprite.spriteWidth) / enemySprite.frameCount;
+    this.drawEnemy(testmath, srcXenemies);
+  }
+  //enemytest
+  drawEnemy(testmath, srcXenemies) {
     for (var arrays in enemiesContainer.samuraiRight) {
       if (
         testmath == 46 + parseInt(arrays) &&
@@ -184,6 +188,13 @@ class SpriteAnimationConstructor {
       }
       if (enemiesContainer.samuraiRight[arrays] == true) {
         posXenemies[arrays] += dxEnemies;
+        if (
+          posXenemies[arrays] > posX - 120 &&
+          posXenemies[arrays] < posX - 80 &&
+          posY > groundLevel - 50
+        ) {
+          charDeath();
+        }
         if (posXenemies[arrays] > 720) {
           enemiesContainer.samuraiRight[arrays] = false;
         }
@@ -191,7 +202,7 @@ class SpriteAnimationConstructor {
           posXenemies[arrays] + 85 < posShuriken &&
           posXenemies[arrays] + 105 > posShuriken &&
           throwing == true &&
-          posYShuriken > 340
+          posYShuriken > groundLevel - 20
         ) {
           enemiesContainer.samuraiRight[arrays] = false;
           throwing = false;
@@ -222,6 +233,13 @@ class SpriteAnimationConstructor {
       }
       if (enemiesContainer.samuraiLeft[arrays] == true) {
         posXenemiesLeft[arrays] -= dxEnemies;
+        if (
+          posXenemiesLeft[arrays] > posX - 40 &&
+          posXenemiesLeft[arrays] < posX &&
+          posY > groundLevel - 50
+        ) {
+          charDeath();
+        }
         if (posXenemiesLeft[arrays] < -140) {
           enemiesContainer.samuraiLeft[arrays] = false;
         }
@@ -229,7 +247,7 @@ class SpriteAnimationConstructor {
           posXenemiesLeft[arrays] + 15 < posShuriken &&
           posXenemiesLeft[arrays] + 35 > posShuriken &&
           throwing == true &&
-          posYShuriken > 340
+          posYShuriken > groundLevel - 20
         ) {
           enemiesContainer.samuraiLeft[arrays] = false;
           throwing = false;
@@ -486,6 +504,14 @@ function throwShuriken() {
   posYShuriken = posY + 20;
   throwing = true;
 }
+function charDeath() {
+  if (death == false) {
+    curFrame = 0;
+    counter = 0;
+    dxEnemies = 0;
+    death = true;
+  }
+}
 
 move = {
   left: false,
@@ -564,9 +590,7 @@ moveMenu = {
         break;
       case 81:
         if (death == false) {
-          curFrame = 0;
-          counter = 0;
-          death = true;
+          charDeath();
         }
     }
   }
@@ -630,7 +654,7 @@ function draw() {
     drawSound();
     drawBackButton();
     shurikenSprite.drawShuriken();
-    enemySprite.drawEnemy();
+    enemySprite.chooseEnemy();
     moveChar();
     ctx.fillText("You have defeated " + score + " samurai", 180, 90);
   }
