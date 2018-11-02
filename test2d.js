@@ -8,45 +8,44 @@ var posY; // Posisjon langs y-aksen.
 var dx = 0; // Fartsvektor langs x-aksen.
 var dy = 0; // Fartsvektor langs y-aksen.
 var groundLevel = canvas.height - 190; // Bakkenivå
-var friction = 0.9;
-var gravity = 0.6;
+var friction = 0.9; //friksjon for mainChar
+var gravity = 0.6; //gravity som blir brukt når mainChar hopper
 
 // Kontroll:
-var upReleased = false;
-var lastRight = true;
-var throwing = false;
-var curFrameEnemy = 0;
-var curFrameShuriken = 0;
+var upReleased = false; //variabel som blir brukt for dobbelhopp
+var lastRight = true; //variabel som blir brukt for å bestemme om person spriten skal se mot venstre eller høyre
+var throwing = false; //variabel som blir brukt for å avgjøren om man kan kaste en ny shuriken
 var doubleJump = false;
 var audioCounter = 0;
 var death = false;
 var score = 0;
 
+//"currentFrame", de fleste animasjonene har en spritesheet på 10 deler, og disse variablene vil variere mellom 0 og maks antall deler i sitt spritesheet
+var curFrame = 0;
+var curFrameEnemy = 0;
+var curFrameShuriken = 0;
+var curFrameShuriken = 0;
+
 // Enemies:
-var posXenemies = [];
-var posXenemiesLeft = [];
-var posYenemies = [];
-var dxEnemies = 2;
+var posXenemies = []; //en array med x posisjoner til enemies som går mot høyre
+var posXenemiesLeft = []; //en array med x posisjoner til enemies som går mot venstre
+var posYenemies = []; //en array med y posisjoner til enemies
+var dxEnemies = 2; //hastigheten til enemies
 
 // Shuriken:
-var posShuriken;
-var curFrameShuriken = 0;
-var posShuriken;
-var leftShuriken = false;
-var srcXShuriken = 0;
-var velocityShuriken = 0;
+var posShuriken; //x posisjonen til shuriken man kaster
+var srcXShuriken = 0; //definerer hvor på spritesheeten man skal starte å "klippe"
+var velocityShuriken = 0; //definerer hastigheten til shuriken
 
-// Meny:
+// Meny: variabler som endres avhengig av om man er på menyen, spillet, credits osv.
 var menu = true;
 var credits = false;
 var instructions = false;
-var menuCounter = 0;
 var game = false;
+var menuCounter = 0; //variabel for å bruke piltastene på menyen
 
-var menuCounter = 0;
-var curFrame = 0;
-var counter = 0;
-var srcX = 0;
+var counter = 0; //variabel som blir brukt for telling i animasjonsfunksjon
+var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
@@ -83,15 +82,15 @@ enemyRight.src = "img/enemyRight.png";
 var enemyLeft = new Image();
 enemyLeft.src = "img/enemyLeft.png";
 
-//Class with objects containing information of sprites, and functions to draw them
+//Class hvor man sender inn informasjon om sprites som skal bli tegnet, og funksjoner for å tegne dem.
 class SpriteAnimationConstructor {
   constructor(
-    spriteWidth,
-    spriteHeight,
-    charWidth,
-    charHeight,
-    frameCount,
-    source
+    spriteWidth, //bredde på spritesheet delen som skal brukes
+    spriteHeight, //høyde på spritesheet delen som skal brukes
+    charWidth, //bredde på spriten som skal tegnes på canvas
+    charHeight, //høyde på spriten som skal tegnes på canvas
+    frameCount, //hvor mange deler en spritesheet har, vil endre på maksverdien til curFrame
+    source //hvilket spritesheet som skal brukes
   ) {
     this.spriteWidth = spriteWidth;
     this.spriteHeight = spriteHeight;
@@ -101,7 +100,7 @@ class SpriteAnimationConstructor {
     this.source = source;
   }
 
-  //animate main character at posx and posy with information depending on sprite used.
+  //Tegner hovedpersonen ift. variablene posX og posY, og informasjon om spriten som blir brukt.
   animateMainChar() {
     ctx.drawImage(
       this.source,
@@ -115,7 +114,7 @@ class SpriteAnimationConstructor {
       this.charHeight
     );
   }
-  //returns which sprite from mainChar spritesheet to use
+  //"oppdaterer" hvilken sprite fra spritesheet som skal bli brukt
   updateIndex() {
     if (counter == 3 && death == false) {
       curFrame = (curFrame + 1) % this.frameCount;
@@ -129,11 +128,11 @@ class SpriteAnimationConstructor {
       }
     }
 
-    //Calculating the x coordinate for spritesheet
+    // Returnerer sourceX som blir
     return (curFrame * this.spriteWidth) / this.frameCount;
   }
 
-  //Draw shuriken if throwing == true
+  //Tegner shuriken hvis throwing == true, og endrer posisjonen.
   drawShuriken() {
     if (throwing == true) {
       posShuriken += velocityShuriken;
@@ -160,7 +159,6 @@ class SpriteAnimationConstructor {
     if (counter == 1) {
       curFrameShuriken = (curFrameShuriken + 1) % 4;
     }
-    //Calculating the x coordinate for spritesheet
     return (srcXShuriken =
       curFrameShuriken *
       (shurikenSprite.spriteWidth / shurikenSprite.frameCount));
