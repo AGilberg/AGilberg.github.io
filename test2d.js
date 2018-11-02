@@ -222,7 +222,7 @@ class SpriteAnimationConstructor {
         );
       }
     }
-    for (var arrays in enemiesContainer.samuraiRight) {
+    for (var arrays in enemiesContainer.samuraiLeft) {
       if (
         testmath == 54 + parseInt(arrays) &&
         enemiesContainer.samuraiLeft[arrays] == false
