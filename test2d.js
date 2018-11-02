@@ -167,27 +167,29 @@ class SpriteAnimationConstructor {
   }
 
   chooseEnemy() {
-    var testmath = Math.floor(Math.random() * 2000); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
+    var testmath = Math.floor(Math.random() * 200); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
     if (counter == 1) {
       curFrameEnemy = (curFrameEnemy + 1) % 10;
     }
     var srcXenemies =
       (curFrameEnemy * enemySprite.spriteWidth) / enemySprite.frameCount;
-    this.drawEnemy(testmath, srcXenemies);
+    this.drawEnemy(testmath, srcXenemies, enemiesContainer.samuraiRight, -140, 1);
+    this.drawEnemy(testmath, srcXenemies, enemiesContainer.samuraiLeft, 720, -1);
   }
   //enemytest
-  drawEnemy(testmath, srcXenemies) {
-    for (var arrays in enemiesContainer.samuraiRight) {
+  // IKKE FERDIG, se igjennom funksjonen (drawEnemy)
+  drawEnemy(testmath, srcXenemies, enemyArray, side, direction) {
+    for (var arrays in enemyArray) {
       if (
         testmath == 46 + parseInt(arrays) &&
-        enemiesContainer.samuraiRight[arrays] == false
+        enemyArray[arrays] == false
       ) {
-        enemiesContainer.samuraiRight[arrays] = true;
-        posXenemies[arrays] = -140;
+        enemyArray[arrays] = true;
+        posXenemies[arrays] = side;
         posYenemies = groundLevel;
       }
-      if (enemiesContainer.samuraiRight[arrays] == true) {
-        posXenemies[arrays] += dxEnemies;
+      if (enemyArray[arrays] == true) {
+        posXenemies[arrays] += (dxEnemies*direction);
         if (
           posXenemies[arrays] > posX - 120 &&
           posXenemies[arrays] < posX - 80 &&
@@ -196,7 +198,7 @@ class SpriteAnimationConstructor {
           charDeath();
         }
         if (posXenemies[arrays] > 720) {
-          enemiesContainer.samuraiRight[arrays] = false;
+          enemyArray[arrays] = false;
         }
         if (
           posXenemies[arrays] + 85 < posShuriken &&
@@ -204,7 +206,7 @@ class SpriteAnimationConstructor {
           throwing == true &&
           posYShuriken > groundLevel - 20
         ) {
-          enemiesContainer.samuraiRight[arrays] = false;
+          enemyArray[arrays] = false;
           throwing = false;
           score++;
         }
@@ -216,51 +218,6 @@ class SpriteAnimationConstructor {
           this.spriteWidth / this.frameCount,
           this.spriteHeight,
           posXenemies[arrays],
-          posYenemies,
-          this.charWidth,
-          this.charHeight
-        );
-      }
-    }
-    for (var arrays in enemiesContainer.samuraiRight) {
-      if (
-        testmath == 54 + parseInt(arrays) &&
-        enemiesContainer.samuraiLeft[arrays] == false
-      ) {
-        enemiesContainer.samuraiLeft[arrays] = true;
-        posXenemiesLeft[arrays] = 720;
-        posYenemies = groundLevel;
-      }
-      if (enemiesContainer.samuraiLeft[arrays] == true) {
-        posXenemiesLeft[arrays] -= dxEnemies;
-        if (
-          posXenemiesLeft[arrays] > posX - 40 &&
-          posXenemiesLeft[arrays] < posX &&
-          posY > groundLevel - 50
-        ) {
-          charDeath();
-        }
-        if (posXenemiesLeft[arrays] < -140) {
-          enemiesContainer.samuraiLeft[arrays] = false;
-        }
-        if (
-          posXenemiesLeft[arrays] + 15 < posShuriken &&
-          posXenemiesLeft[arrays] + 35 > posShuriken &&
-          throwing == true &&
-          posYShuriken > groundLevel - 20
-        ) {
-          enemiesContainer.samuraiLeft[arrays] = false;
-          throwing = false;
-          score++;
-        }
-
-        ctx.drawImage(
-          enemyLeft,
-          srcXenemies,
-          0,
-          this.spriteWidth / this.frameCount,
-          this.spriteHeight,
-          posXenemiesLeft[arrays],
           posYenemies,
           this.charWidth,
           this.charHeight
@@ -369,6 +326,17 @@ canvas.addEventListener("click", function(event) {
   var muteY = 45;
   // Control that click event occurred within position of button
   var rect = canvas.getBoundingClientRect();
+
+  function clicked(button, state) {
+    return (
+      event.x - rect.left > button.leftX &&
+      event.x - rect.left < button.rightX &&
+      event.y - rect.top > button.topY &&
+      event.y - rect.top < button.bottomY &&
+      menu == state
+    );
+  }
+
   if (
     event.x - rect.left > muteX &&
     event.y - rect.top < muteY &&
@@ -385,45 +353,21 @@ canvas.addEventListener("click", function(event) {
     }
     audioCounter++;
   }
-  if (
-    event.x - rect.left > startGame.leftX &&
-    event.x - rect.left < startGame.rightX &&
-    event.y - rect.top > startGame.topY &&
-    event.y - rect.top < startGame.bottomY &&
-    menu == true
-  ) {
+  if (clicked(startGame, true)) {
     posX = canvas.width / 2;
     posY = groundLevel;
     game = true;
     menu = false;
   }
-  if (
-    event.x - rect.left > instructionsBox.leftX &&
-    event.x - rect.left < instructionsBox.rightX &&
-    event.y - rect.top > instructionsBox.topY &&
-    event.y - rect.top < instructionsBox.bottomY &&
-    menu == true
-  ) {
+  if (clicked(instructionsBox, true)) {
     menu = false;
     instructions = true;
   }
-  if (
-    event.x - rect.left > creditsBox.leftX &&
-    event.x - rect.left < creditsBox.rightX &&
-    event.y - rect.top > creditsBox.topY &&
-    event.y - rect.top < creditsBox.bottomY &&
-    menu == true
-  ) {
+  if (clicked(creditsBox, true)) {
     menu = false;
     credits = true;
   }
-  if (
-    event.x - rect.left > backButton.leftX &&
-    event.x - rect.left < backButton.rightX &&
-    event.y - rect.top > backButton.topY &&
-    event.y - rect.top < backButton.bottomY &&
-    menu == false
-  ) {
+  if (clicked(backButton, false)) {
     credits = false;
     instructions = false;
     game = false;
@@ -437,31 +381,22 @@ canvas.addEventListener("mousemove", function(event) {
 
   // Control that mouseover event occurred within position of button
   var rect = canvas.getBoundingClientRect();
-  if (
-    event.x - rect.left > startGame.leftX &&
-    event.x - rect.left < startGame.rightX &&
-    event.y - rect.top > startGame.topY &&
-    event.y - rect.top < startGame.bottomY &&
-    game == false
-  ) {
+  function mouseOver(button, state) {
+    return (
+      event.x - rect.left > button.leftX &&
+      event.x - rect.left < button.rightX &&
+      event.y - rect.top > button.topY &&
+      event.y - rect.top < button.bottomY &&
+      game == state
+    )
+  }
+  if (mouseOver(startGame, false)) {
     menuCounter = 0;
   }
-  if (
-    event.x - rect.left > instructionsBox.leftX &&
-    event.x - rect.left < instructionsBox.rightX &&
-    event.y - rect.top > instructionsBox.topY &&
-    event.y - rect.top < instructionsBox.bottomY &&
-    game == false
-  ) {
+  if (mouseOver(instructionsBox, false)) {
     menuCounter = 1;
   }
-  if (
-    event.x - rect.left > creditsBox.leftX &&
-    event.x - rect.left < creditsBox.rightX &&
-    event.y - rect.top > creditsBox.topY &&
-    event.y - rect.top < creditsBox.bottomY &&
-    game == false
-  ) {
+  if (mouseOver(creditsBox, false)) {
     menuCounter = 2;
   }
 });
