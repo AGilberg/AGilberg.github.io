@@ -656,7 +656,11 @@ function draw() {
     shurikenSprite.drawShuriken();
     enemySprite.chooseEnemy();
     moveChar();
-    ctx.fillText("You have defeated " + score + " samurai", 180, 90);
+    if (death == false) {
+      ctx.fillText("You have defeated " + score + " samurai", 180, 90);
+    } else {
+      ctx.fillText("GAME OVER, you deafeated " + score + " samurai", 130, 90);
+    }
   }
   if (menu == true) {
     menuDraw();
