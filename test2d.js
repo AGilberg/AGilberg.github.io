@@ -224,6 +224,54 @@ class SpriteAnimationConstructor {
         );
       }
     }
+<<<<<<< HEAD
+=======
+    for (var arrays in enemiesContainer.samuraiLeft) {
+      if (
+        testmath == 54 + parseInt(arrays) &&
+        enemiesContainer.samuraiLeft[arrays] == false
+      ) {
+        enemiesContainer.samuraiLeft[arrays] = true;
+        posXenemiesLeft[arrays] = 720;
+        posYenemies = groundLevel;
+      }
+      if (enemiesContainer.samuraiLeft[arrays] == true) {
+        posXenemiesLeft[arrays] -= dxEnemies;
+        if (
+          posXenemiesLeft[arrays] > posX - 40 &&
+          posXenemiesLeft[arrays] < posX &&
+          posY > groundLevel - 50
+        ) {
+          charDeath();
+        }
+        if (posXenemiesLeft[arrays] < -140) {
+          enemiesContainer.samuraiLeft[arrays] = false;
+        }
+        if (
+          posXenemiesLeft[arrays] + 15 < posShuriken &&
+          posXenemiesLeft[arrays] + 35 > posShuriken &&
+          throwing == true &&
+          posYShuriken > groundLevel - 20
+        ) {
+          enemiesContainer.samuraiLeft[arrays] = false;
+          throwing = false;
+          score++;
+        }
+
+        ctx.drawImage(
+          enemyLeft,
+          srcXenemies,
+          0,
+          this.spriteWidth / this.frameCount,
+          this.spriteHeight,
+          posXenemiesLeft[arrays],
+          posYenemies,
+          this.charWidth,
+          this.charHeight
+        );
+      }
+    }
+>>>>>>> b2362f8f922cb12f91a35c118015aa2bfa15f053
   }
 }
 
@@ -371,8 +419,14 @@ canvas.addEventListener("click", function(event) {
     credits = false;
     instructions = false;
     game = false;
-    menu = true;
+    for (var enemies in enemiesContainer.samuraiLeft) {
+      enemiesContainer.samuraiLeft[enemies] = false;
+    }
+    for (var enemies in enemiesContainer.samuraiRight) {
+      enemiesContainer.samuraiRight[enemies] = false;
+    }
     death = false;
+    menu = true;
   }
 });
 
