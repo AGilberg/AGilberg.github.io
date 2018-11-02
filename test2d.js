@@ -57,8 +57,8 @@ audio.src = "sakura.mp3";
 var shuriken = new Image();
 shuriken.src = "img/shuriken.png";
 var animation = new Image();
-var idle = new Image();
-idle.src = "img/idle.png";
+var idleR = new Image();
+idleR.src = "img/idle.png";
 var idleL = new Image();
 idleL.src = "img/idleL.png";
 var runLeft = new Image();
@@ -253,19 +253,6 @@ class SpriteAnimationConstructor {
   }
 }
 
-class menuBoxConstructor {
-  constructor(leftX, rightX, topY, bottomY) {
-    (this.leftX = leftX),
-      (this.rightX = rightX),
-      (this.topY = topY),
-      (this.bottomY = bottomY);
-  }
-}
-
-const creditsBox = new menuBoxConstructor(240, 367, 167, 194);
-const instructionsBox = new menuBoxConstructor(210, 410, 117, 147);
-const startGame = new menuBoxConstructor(223, 395, 64, 98);
-const backButton = new menuBoxConstructor(0, 50, 0, 50);
 const enemySprite = new SpriteAnimationConstructor(
   5220,
   255,
@@ -290,7 +277,14 @@ const shurikenSprite = new SpriteAnimationConstructor(
   4,
   shuriken
 );
-const idleSprite = new SpriteAnimationConstructor(2420, 449, 40, 75, 10, idle);
+const idleRSprite = new SpriteAnimationConstructor(
+  2420,
+  449,
+  40,
+  75,
+  10,
+  idleR
+);
 const idleLSprite = new SpriteAnimationConstructor(
   2420,
   449,
@@ -357,6 +351,21 @@ const enemiesContainer = {
     false
   ]
 };
+
+class menuBoxConstructor {
+  constructor(leftX, rightX, topY, bottomY) {
+    (this.leftX = leftX),
+      (this.rightX = rightX),
+      (this.topY = topY),
+      (this.bottomY = bottomY);
+  }
+}
+
+const creditsBox = new menuBoxConstructor(240, 367, 167, 194);
+const instructionsBox = new menuBoxConstructor(210, 410, 117, 147);
+const startGame = new menuBoxConstructor(223, 395, 64, 98);
+const backButton = new menuBoxConstructor(0, 50, 0, 50);
+
 // Add click event listener to canvas element
 canvas.addEventListener("click", function(event) {
   // Button position and dimensions
@@ -450,7 +459,7 @@ function findAnimation() {
     (!move.left && !move.right && dy == 0 && lastRight == true) ||
     (move.left && move.right && dy == 0 && lastRight == true)
   ) {
-    idleSprite.animateMainChar();
+    idleRSprite.animateMainChar();
   } else if (
     (!move.left && !move.right && dy == 0 && lastRight == false) ||
     (move.left && move.right && dy == 0 && lastRight == false)
