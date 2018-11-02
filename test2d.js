@@ -427,8 +427,14 @@ canvas.addEventListener("click", function(event) {
     credits = false;
     instructions = false;
     game = false;
-    menu = true;
+    for (var enemies in enemiesContainer.samuraiLeft) {
+      enemiesContainer.samuraiLeft[enemies] = false;
+    }
+    for (var enemies in enemiesContainer.samuraiRight) {
+      enemiesContainer.samuraiRight[enemies] = false;
+    }
     death = false;
+    menu = true;
   }
 });
 
