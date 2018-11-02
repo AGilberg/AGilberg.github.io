@@ -29,8 +29,10 @@ var curFrameShuriken = 0;
 // Enemies:
 var posXenemies = []; //en array med x posisjoner til enemies som går mot høyre
 var posXenemiesLeft = []; //en array med x posisjoner til enemies som går mot venstre
-var posYenemies = []; //en array med y posisjoner til enemies
-var dxEnemies = 2; //hastigheten til enemies
+var posYenemies = groundLevel; //en array med y posisjoner til enemies
+var dxEnemies = []; //hastigheten til enemies
+var srcXenemies = 0;
+var spriteEnemy = [];
 
 // Shuriken:
 var posShuriken; //x posisjonen til shuriken man kaster
@@ -46,6 +48,8 @@ var menuCounter = 0; //variabel for å bruke piltastene på menyen
 
 var counter = 0; //variabel som blir brukt for telling i animasjonsfunksjon
 var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
+
+var positionModifier;
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
@@ -81,6 +85,7 @@ var enemyRight = new Image();
 enemyRight.src = "img/enemyRight.png";
 var enemyLeft = new Image();
 enemyLeft.src = "img/enemyLeft.png";
+var direction = new Image();
 
 //Class hvor man sender inn informasjon om sprites som skal bli tegnet, og funksjoner for å tegne dem.
 class SpriteAnimationConstructor {
@@ -141,6 +146,8 @@ class SpriteAnimationConstructor {
       } else if (posShuriken > 720) {
         throwing = false;
       }
+
+      srcXShuriken = this.updateFrameShuriken();
       ctx.drawImage(
         shuriken,
         this.updateFrameShuriken(),
@@ -159,117 +166,90 @@ class SpriteAnimationConstructor {
     if (counter == 1) {
       curFrameShuriken = (curFrameShuriken + 1) % 4;
     }
-    return (srcXShuriken =
+    return (
       curFrameShuriken *
-      (shurikenSprite.spriteWidth / shurikenSprite.frameCount));
+      (shurikenSprite.spriteWidth / shurikenSprite.frameCount)
+    );
   }
 
-  chooseEnemy() {
-    var testmath = Math.floor(Math.random() * 200); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
+  updateEnemySprite() {
     if (counter == 1) {
       curFrameEnemy = (curFrameEnemy + 1) % 10;
     }
-    var srcXenemies =
-      (curFrameEnemy * enemySprite.spriteWidth) / enemySprite.frameCount;
-    this.drawEnemy(testmath, srcXenemies, enemiesContainer.samuraiRight, -140, 1);
-    this.drawEnemy(testmath, srcXenemies, enemiesContainer.samuraiLeft, 720, -1);
+    return (curFrameEnemy * enemySprite.spriteWidth) / enemySprite.frameCount;
   }
-  //enemytest
-  // IKKE FERDIG, se igjennom funksjonen (drawEnemy)
-  drawEnemy(testmath, srcXenemies, enemyArray, side, direction) {
-    for (var arrays in enemyArray) {
+
+  chooseEnemy() {
+    var testmath = Math.floor(Math.random() * 2000); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
+
+    for (var arrays in enemiesContainer.samuraiLeft) {
       if (
-        testmath == 46 + parseInt(arrays) &&
-        enemyArray[arrays] == false
+        testmath == parseInt(arrays) &&
+        enemiesContainer.samuraiLeft[arrays] == false
       ) {
-        enemyArray[arrays] = true;
-        posXenemies[arrays] = side;
-        posYenemies = groundLevel;
+        enemiesContainer.samuraiLeft[arrays] = true;
+        if (counter % 2 == 0) {
+          posXenemies[arrays] = 720;
+          dxEnemies[arrays] = -2;
+          spriteEnemy[arrays] = enemyLeft;
+        } else if (counter % 2 == 1) {
+          posXenemies[arrays] = -140;
+          dxEnemies[arrays] = 2;
+          spriteEnemy[arrays] = enemyRight;
+        }
       }
-      if (enemyArray[arrays] == true) {
-        posXenemies[arrays] += (dxEnemies*direction);
+    }
+    this.drawEnemy();
+  }
+
+  drawEnemy() {
+    srcXenemies = this.updateEnemySprite();
+    for (var arrays in enemiesContainer.samuraiLeft) {
+      if (enemiesContainer.samuraiLeft[arrays] == true) {
+        posXenemies[arrays] += dxEnemies[arrays];
+        if (dxEnemies[arrays] < 0) {
+          if (posXenemies[arrays] < -140) {
+            enemiesContainer.samuraiLeft[arrays] = false;
+          }
+          positionModifier = 40;
+        } else if (dxEnemies[arrays] > 0) {
+          if (posXenemies[arrays] > 720) {
+            enemiesContainer.samuraiLeft[arrays] = false;
+          }
+          positionModifier = 100;
+        }
         if (
-          posXenemies[arrays] > posX - 120 &&
-          posXenemies[arrays] < posX - 80 &&
+          posXenemies[arrays] > posX - positionModifier &&
+          posXenemies[arrays] < posX - positionModifier + 30 &&
           posY > groundLevel - 50
         ) {
+          dxEnemies[arrays] = 0;
           charDeath();
         }
-        if (posXenemies[arrays] > 720) {
-          enemyArray[arrays] = false;
-        }
         if (
-          posXenemies[arrays] + 85 < posShuriken &&
-          posXenemies[arrays] + 105 > posShuriken &&
+          posXenemies[arrays] > posShuriken - positionModifier &&
+          posXenemies[arrays] < posShuriken - positionModifier + 30 &&
           throwing == true &&
           posYShuriken > groundLevel - 20
         ) {
-          enemyArray[arrays] = false;
+          enemiesContainer.samuraiLeft[arrays] = false;
           throwing = false;
           score++;
         }
 
         ctx.drawImage(
-          enemyRight,
+          spriteEnemy[arrays],
           srcXenemies,
           0,
           this.spriteWidth / this.frameCount,
           this.spriteHeight,
           posXenemies[arrays],
-          posYenemies,
+          groundLevel,
           this.charWidth,
           this.charHeight
         );
       }
     }
-<<<<<<< HEAD
-=======
-    for (var arrays in enemiesContainer.samuraiLeft) {
-      if (
-        testmath == 54 + parseInt(arrays) &&
-        enemiesContainer.samuraiLeft[arrays] == false
-      ) {
-        enemiesContainer.samuraiLeft[arrays] = true;
-        posXenemiesLeft[arrays] = 720;
-        posYenemies = groundLevel;
-      }
-      if (enemiesContainer.samuraiLeft[arrays] == true) {
-        posXenemiesLeft[arrays] -= dxEnemies;
-        if (
-          posXenemiesLeft[arrays] > posX - 40 &&
-          posXenemiesLeft[arrays] < posX &&
-          posY > groundLevel - 50
-        ) {
-          charDeath();
-        }
-        if (posXenemiesLeft[arrays] < -140) {
-          enemiesContainer.samuraiLeft[arrays] = false;
-        }
-        if (
-          posXenemiesLeft[arrays] + 15 < posShuriken &&
-          posXenemiesLeft[arrays] + 35 > posShuriken &&
-          throwing == true &&
-          posYShuriken > groundLevel - 20
-        ) {
-          enemiesContainer.samuraiLeft[arrays] = false;
-          throwing = false;
-          score++;
-        }
-
-        ctx.drawImage(
-          enemyLeft,
-          srcXenemies,
-          0,
-          this.spriteWidth / this.frameCount,
-          this.spriteHeight,
-          posXenemiesLeft[arrays],
-          posYenemies,
-          this.charWidth,
-          this.charHeight
-        );
-      }
-    }
->>>>>>> b2362f8f922cb12f91a35c118015aa2bfa15f053
   }
 }
 
@@ -362,8 +342,20 @@ const startMenuSprite = new SpriteAnimationConstructor(
 
 //enemytest antall fiender man kan ha samtidig.
 const enemiesContainer = {
-  samuraiLeft: [false, false, false, false, false, false],
-  samuraiRight: [false, false, false, false, false, false]
+  samuraiLeft: [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ]
 };
 // Add click event listener to canvas element
 canvas.addEventListener("click", function(event) {
@@ -420,9 +412,6 @@ canvas.addEventListener("click", function(event) {
     for (var enemies in enemiesContainer.samuraiLeft) {
       enemiesContainer.samuraiLeft[enemies] = false;
     }
-    for (var enemies in enemiesContainer.samuraiRight) {
-      enemiesContainer.samuraiRight[enemies] = false;
-    }
     death = false;
     menu = true;
   }
@@ -440,7 +429,7 @@ canvas.addEventListener("mousemove", function(event) {
       event.y - rect.top > button.topY &&
       event.y - rect.top < button.bottomY &&
       game == state
-    )
+    );
   }
   if (mouseOver(startGame, false)) {
     menuCounter = 0;
@@ -495,7 +484,6 @@ function charDeath() {
   if (death == false) {
     curFrame = 0;
     counter = 0;
-    dxEnemies = 0;
     death = true;
   }
 }
@@ -646,7 +634,7 @@ function draw() {
     if (death == false) {
       ctx.fillText("You have defeated " + score + " samurai", 180, 90);
     } else {
-      ctx.fillText("GAME OVER, you deafeated " + score + " samurai", 130, 90);
+      ctx.fillText("GAME OVER, you defeated " + score + " samurai", 130, 90);
     }
   }
   if (menu == true) {
