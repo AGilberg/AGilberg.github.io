@@ -48,7 +48,6 @@ var menuCounter = 0; //variabel for å bruke piltastene på menyen
 
 var counter = 0; //variabel som blir brukt for telling i animasjonsfunksjon
 var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
-
 var positionModifier;
 
 // Audio og sprites/grafikk:
