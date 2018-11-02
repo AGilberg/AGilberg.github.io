@@ -1,0 +1,173 @@
+/* CSS for hovedsiden og meny----------------------- */
+#meny {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: rgb(240, 178, 122);
+  border-style: solid;
+}
+
+li {
+  float: left;
+  border-right: 4px solid black;
+}
+
+li a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-weight: bold;
+  font-style: oblique;
+}
+
+li a:hover {
+  background-color: rgb(245, 176, 65);
+}
+
+.active {
+  background-color: rgb(245, 176, 65);
+}
+/* --------------------------------------------- */
+
+/* ----- Generell html kode ----- */
+
+html {
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-image: url(https://wallpapertag.com/wallpaper/full/2/4/8/361467-japanese-background-1920x1200-for-samsung.jpg);
+  background-size: cover;
+}
+/* -------------------------------*/
+
+/* Dette er css for kontakt oss siden ------------------------------ */
+
+#skjema {
+  text-align: center;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="textarea"] {
+  width: 30%;
+  padding: 9px 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border-style: groove;
+  border-color: rgb(240, 178, 122);
+  border-width: thick;
+}
+
+label {
+  border-style: double;
+  font-style: oblique;
+  font-weight: bold;
+  font-size: 20px;
+  background-color: rgb(255, 230, 179);
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+h2 {
+  text-align: center;
+  font-style: oblique;
+}
+
+.border {
+  border-style: double;
+  border-width: thick;
+  border-color: black;
+  background-color: rgb(255, 230, 179);
+}
+
+#div1,
+#div2 {
+  padding-right: 170px;
+  padding-left: 170px;
+}
+
+textarea {
+  width: 40%;
+  height: 140px;
+  padding: 9px 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border-style: groove;
+  border-color: rgb(240, 178, 122);
+  border-width: thick;
+}
+
+select {
+  padding: 7px 8px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border-style: groove;
+  border-color: rgb(240, 178, 122);
+  border-width: thick;
+}
+
+.button {
+  background-color: rgb(255, 230, 179);
+  color: Black;
+  padding: 16px 32px;
+  text-align: center;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.7s; /* Safari */
+  transition-duration: 0.7s;
+  cursor: pointer;
+
+  border-radius: 12px;
+  border-style: double;
+  border-color: black;
+
+  font-size: 20px;
+  font-style: oblique;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: rgb(245, 176, 65);
+}
+
+#knapp {
+  text-align: center;
+}
+
+#for_sjekk,
+#etter_sjekk,
+#email_sjekk {
+  width: 20px;
+  height: 20px;
+}
+
+#kommentar_sjekk {
+  width: 20px;
+  height: 20px;
+  padding-bottom: 120px;
+}
+/* ----------------------------------------------- */
+
+/* ------------------------------- Våre lokaler sin css ---- */
+/* Her har vi prøvd oss litt med flex! */
+.bildeGMYR {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+
+.bildeGMYR > div {
+  flex-grow: 1;
+  justify-content: space-evenly;
+  width: 50%;
+  text-align: center;
+}
+
+/* ---------------------------------------------------- */
+
+canvas {
+  border: 2px solid black;
+}

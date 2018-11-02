@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-      <meta charset="utf-8">
-      <title>Nytt spill</title>
-      <link rel="stylesheet" href="styles.css">
-      <style>
-      	canvas { background: url("img/background1.jpeg"); display: block; margin: 0 auto; background-size: cover; }
-      </style>
+    <meta charset="utf-8">
+    <title>Hjemmeside G25</title>
+    <link rel="stylesheet" href="felles-webside.css">
+    <style>
+      canvas { background: url("img/background1.png"); display: block; margin: 0 auto; background-size: cover; }
+    </style>
   </head>
   <body>
 
-    <canvas id="canvas" width="720" height="480"></canvas>
-    <script src="test2d.js" charset="utf-8"></script>
+  <ul id="meny">
+    <li><a class="active" href="index.html"> Hjem </a></li>
+    <li><a href="dokumentasjon.html"> Dokumentasjon </a></li>
+    <li><a href="kontakt-oss.html"> Kontakt oss </a></li>
+    <li><a href="vaare-lokaler.html"> Våre lokaler </a></li>
+
+
+  </ul>
+  <br>
+  <canvas id="canvas" width="720" height="480"></canvas>
+  <center><h1>How to play</h1></center>
+  <center><h1>Arrows to move, A and D to shoot shuriken</h1></center>
+  <script src="test2d.js" charset="utf-8"></script>
+
   </body>
 </html>
