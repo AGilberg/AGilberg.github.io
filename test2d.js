@@ -15,24 +15,24 @@ var gravity = 0.6; //gravity som blir brukt når mainChar hopper
 var upReleased = false; //variabel som blir brukt for dobbelhopp
 var lastRight = true; //variabel som blir brukt for å bestemme om person spriten skal se mot venstre eller høyre
 var throwing = false; //variabel som blir brukt for å avgjøren om man kan kaste en ny shuriken
-var doubleJump = false;
-var audioCounter = 0;
-var death = false;
-var score = 0;
+var doubleJump = false; //alltid false når man er på bakkenivå, true hvis man har tatt et dobbelhopp i luften.
+var audioCounter = 0; //brukes for å avgjøre om lyden skal skrues av eller på.
+var death = false; //avgjører om karakteren er død eller ikke
+var score = 0; //teller hvor mange samurai man har drept
 
 //"currentFrame", de fleste animasjonene har en spritesheet på 10 deler, og disse variablene vil variere mellom 0 og maks antall deler i sitt spritesheet
 var curFrame = 0;
 var curFrameEnemy = 0;
-var curFrameShuriken = 0;
 var curFrameShuriken = 0;
 
 // Enemies:
 var posXenemies = []; //en array med x posisjoner til enemies som går mot høyre
 var posXenemiesLeft = []; //en array med x posisjoner til enemies som går mot venstre
 var posYenemies = groundLevel; //en array med y posisjoner til enemies
-var dxEnemies = []; //hastigheten til enemies
-var srcXenemies = 0;
-var spriteEnemy = [];
+var dxEnemies = []; //array med hastigheten til enemies
+var srcXenemies = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
+var spriteEnemy = []; //array med hvilken animasjon enemies skal ha
+var positionModifier; //blir brukt for hitbox registrering for enemies, siden sprites er ujevn.
 
 // Shuriken:
 var posShuriken; //x posisjonen til shuriken man kaster
@@ -48,7 +48,6 @@ var menuCounter = 0; //variabel for å bruke piltastene på menyen
 
 var counter = 0; //variabel som blir brukt for telling i animasjonsfunksjon
 var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
-var positionModifier;
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
@@ -118,7 +117,7 @@ class SpriteAnimationConstructor {
       this.charHeight
     );
   }
-  //"oppdaterer" hvilken sprite fra spritesheet som skal bli brukt
+  //"oppdaterer" hvilken sprite fra spritesheet som skal bli brukt i hovedkarakter animasjonen
   updateIndex() {
     if (counter == 3 && death == false) {
       curFrame = (curFrame + 1) % this.frameCount;
@@ -132,7 +131,7 @@ class SpriteAnimationConstructor {
       }
     }
 
-    // Returnerer sourceX som blir
+    // Returnerer sourceX som blir i hovedkarakter animasjonen
     return (curFrame * this.spriteWidth) / this.frameCount;
   }
 
@@ -160,7 +159,8 @@ class SpriteAnimationConstructor {
       );
     }
   }
-  //returns which sprite from shuriken spritesheet to use
+
+  //"oppdaterer" hvilken sprite fra spritesheet som skal bli brukt i shuriken animasjonen
   updateFrameShuriken() {
     if (counter == 1) {
       curFrameShuriken = (curFrameShuriken + 1) % 4;
@@ -171,6 +171,7 @@ class SpriteAnimationConstructor {
     );
   }
 
+  //"oppdaterer" hvilken sprite fra spritesheet som skal bli brukt i enemy animasjonen
   updateEnemySprite() {
     if (counter == 1) {
       curFrameEnemy = (curFrameEnemy + 1) % 10;
@@ -178,9 +179,13 @@ class SpriteAnimationConstructor {
     return (curFrameEnemy * enemySprite.spriteWidth) / enemySprite.frameCount;
   }
 
+  //avgjør om enemies skal spawne via en matematisk algoritme, og kaller drawEnemy()
   chooseEnemy() {
-    var testmath = Math.floor(Math.random() * 2000); //random enemy spawn algoritme enemytest, flere spawns vanskelighetsgrad
+    //random enemy spawn algoritme, flere spawns vanskelighetsgrad
+    var testmath = Math.floor(Math.random() * 2000);
 
+    //går igjennom hele samurai containeren. Hvis mattealgoritmen over er lik 0 f.eks, vil den første enemien spawne.
+    //når en enemy spawner og blir true, er det tilfeldig om den spawner til venstre eller høyre.
     for (var arrays in enemiesContainer.samuraiLeft) {
       if (
         testmath == parseInt(arrays) &&
@@ -201,11 +206,13 @@ class SpriteAnimationConstructor {
     this.drawEnemy();
   }
 
+  //looper gjennom alle enemies som er true
   drawEnemy() {
     srcXenemies = this.updateEnemySprite();
     for (var arrays in enemiesContainer.samuraiLeft) {
       if (enemiesContainer.samuraiLeft[arrays] == true) {
         posXenemies[arrays] += dxEnemies[arrays];
+        //despawner enemies hvis de går ut av canvas
         if (dxEnemies[arrays] < 0) {
           if (posXenemies[arrays] < -140) {
             enemiesContainer.samuraiLeft[arrays] = false;
@@ -217,6 +224,7 @@ class SpriteAnimationConstructor {
           }
           positionModifier = 100;
         }
+        //Hvis enemies treffer hitboxen til hovedpersonen, kjøres charDeath funksjonen, og man taper.
         if (
           posXenemies[arrays] > posX - positionModifier &&
           posXenemies[arrays] < posX - positionModifier + 30 &&
@@ -225,6 +233,7 @@ class SpriteAnimationConstructor {
           dxEnemies[arrays] = 0;
           charDeath();
         }
+        //Hvis shuriken treffer hitboxen til enemies, despawner dem osv.
         if (
           posXenemies[arrays] > posShuriken - positionModifier &&
           posXenemies[arrays] < posShuriken - positionModifier + 30 &&
@@ -252,6 +261,7 @@ class SpriteAnimationConstructor {
   }
 }
 
+//objekter med informasjon om spritesene som brukes.
 const enemySprite = new SpriteAnimationConstructor(
   5220,
   255,
@@ -333,7 +343,7 @@ const startMenuSprite = new SpriteAnimationConstructor(
   runRight
 );
 
-//enemytest antall fiender man kan ha samtidig.
+//cointainer med true or false verdi for fiendene.
 const enemiesContainer = {
   samuraiLeft: [
     false,
@@ -351,6 +361,7 @@ const enemiesContainer = {
   ]
 };
 
+//klasse som lager objekter med informasjon om hvor knappene på menyen, samt tilbakeknappen er.
 class menuBoxConstructor {
   constructor(leftX, rightX, topY, bottomY) {
     (this.leftX = leftX),
@@ -365,24 +376,12 @@ const instructionsBox = new menuBoxConstructor(210, 410, 117, 147);
 const startGame = new menuBoxConstructor(223, 395, 64, 98);
 const backButton = new menuBoxConstructor(0, 50, 0, 50);
 
-// Add click event listener to canvas element
 canvas.addEventListener("click", function(event) {
-  // Button position and dimensions
   var muteX = 660;
   var muteY = 45;
-  // Control that click event occurred within position of button
   var rect = canvas.getBoundingClientRect();
 
-  function clicked(button, state) {
-    return (
-      event.x - rect.left > button.leftX &&
-      event.x - rect.left < button.rightX &&
-      event.y - rect.top > button.topY &&
-      event.y - rect.top < button.bottomY &&
-      menu == state
-    );
-  }
-
+  //skrur lyden av og på hvis man trykker på lyd knappen
   if (
     event.x - rect.left > muteX &&
     event.y - rect.top < muteY &&
@@ -399,6 +398,18 @@ canvas.addEventListener("click", function(event) {
     }
     audioCounter++;
   }
+
+  //funskjon som avgjør om man har klikket innenfor et visst område
+  function clicked(button, state) {
+    return (
+      event.x - rect.left > button.leftX &&
+      event.x - rect.left < button.rightX &&
+      event.y - rect.top > button.topY &&
+      event.y - rect.top < button.bottomY &&
+      menu == state
+    );
+  }
+
   if (clicked(startGame, true)) {
     posX = canvas.width / 2;
     posY = groundLevel;
@@ -420,16 +431,16 @@ canvas.addEventListener("click", function(event) {
     for (var enemies in enemiesContainer.samuraiLeft) {
       enemiesContainer.samuraiLeft[enemies] = false;
     }
+    score = 0;
     death = false;
     menu = true;
   }
 });
 
 canvas.addEventListener("mousemove", function(event) {
-  // Button position and dimensions
-
-  // Control that mouseover event occurred within position of button
   var rect = canvas.getBoundingClientRect();
+
+  //funksjon som avgjør om musen er over et visst område
   function mouseOver(button, state) {
     return (
       event.x - rect.left > button.leftX &&
@@ -450,7 +461,7 @@ canvas.addEventListener("mousemove", function(event) {
   }
 });
 
-//finner rett animasjon ift. bevegelse, og kjører changeAnimation.
+//finner rett animasjon ift. bevegelse, og kjører dem via animasjonsklassen øverst.
 function findAnimation() {
   if (death == true) {
     deathAnimationSprite.animateMainChar();
@@ -488,6 +499,8 @@ function throwShuriken() {
   posYShuriken = posY + 20;
   throwing = true;
 }
+
+//Gjør at hovedpersonen dør
 function charDeath() {
   if (death == false) {
     curFrame = 0;
@@ -496,6 +509,7 @@ function charDeath() {
   }
 }
 
+//objekt med keylistener event for forskjellige knappetrykk
 move = {
   left: false,
   right: false,
@@ -527,7 +541,7 @@ move = {
       case 68: // d tast
         move.d = key_state;
         break;
-      case 13:
+      case 13: //enter tast
         if (game == false) {
           if (menuCounter == 0) {
             posX = canvas.width / 2;
@@ -547,6 +561,8 @@ move = {
     }
   }
 };
+
+//objekt med keylistener event for tastetrykk, for menyen
 moveMenu = {
   up: false,
   down: false,
@@ -571,16 +587,14 @@ moveMenu = {
           menuCounter = 0;
         }
         break;
-      case 81:
-        if (death == false) {
-          charDeath();
-        }
     }
   }
 };
 
+//funksjon som tar seg av bevegelse, i forhold til tastetrykkene.
 function moveChar() {
   if (death == false) {
+    //hopping
     if (move.up) {
       if (dy == 0) {
         dy += 18;
@@ -588,16 +602,17 @@ function moveChar() {
         curFrame = 0;
       }
     }
-
+    //bevegelse venstre
     if (move.left) {
       dx -= 0.8;
       lastRight = false;
     }
+    //bevegelse høyre
     if (move.right) {
       dx += 0.8;
       lastRight = true;
     }
-
+    //kaster shuriken
     if (move.d && throwing == false) {
       if (lastRight) {
         velocityShuriken = 10;
@@ -615,21 +630,23 @@ function moveChar() {
   dx *= friction; // friksjon x
   dy *= friction; // friksjon y
 
-  if (posY >= groundLevel) {
+  //kjøres når man lander etter et hopp
+  if (posY >= groundLevel && dy != 0) {
     dy = 0;
     posY = groundLevel;
     upReleased = false;
     doubleJump = true;
   }
 
+  //begrenser bevegelsen innenfor canvas
   if (posX >= canvas.width - 50) {
-    // Hacky løsning:
     posX = canvas.width - 50; // Endre fra 50 til sprite-bredde
   } else if (posX <= 0) {
     posX = 0;
   }
 }
-//"tegne" funksjonen
+
+//hoved gameloop funksjonen
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (game == true) {
@@ -661,6 +678,7 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
+//meny funksjonen
 function menuDraw() {
   ctx.drawImage(menuBackground, 0, 0, 1453, 1024, 0, 0, 720, 480);
   ctx.font = "25px Arial";
@@ -681,6 +699,7 @@ function menuDraw() {
   }
 }
 
+//instructions funksjonen
 function instructionsDraw() {
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(0, 0, 720, 480);
@@ -688,6 +707,7 @@ function instructionsDraw() {
   ctx.stroke();
 }
 
+//credits funksjonen
 function creditsDraw() {
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(0, 0, 720, 480);
