@@ -718,4 +718,3 @@ function creditsDraw() {
 document.addEventListener("keydown", move.keyListener);
 document.addEventListener("keyup", move.keyListener);
 document.addEventListener("keyup", moveMenu.keyListener);
-draw();
