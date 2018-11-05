@@ -47,7 +47,9 @@ var game = false;
 var menuCounter = 0; //variabel for å bruke piltastene på menyen
 
 var counter = 0; //variabel som blir brukt for telling i animasjonsfunksjon
+var enemiesSpeed = 2;
 var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
+var spawntimer = 2000;
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
@@ -182,7 +184,7 @@ class SpriteAnimationConstructor {
   //avgjør om enemies skal spawne via en matematisk algoritme, og kaller drawEnemy()
   chooseEnemy() {
     //random enemy spawn algoritme, flere spawns vanskelighetsgrad
-    var testmath = Math.floor(Math.random() * 2000);
+    var testmath = Math.floor(Math.random() * spawntimer);
 
     //går igjennom hele samurai containeren. Hvis mattealgoritmen over er lik 0 f.eks, vil den første enemien spawne.
     //når en enemy spawner og blir true, er det tilfeldig om den spawner til venstre eller høyre.
@@ -194,12 +196,14 @@ class SpriteAnimationConstructor {
         enemiesContainer.samuraiLeft[arrays] = true;
         if (counter % 2 == 0) {
           posXenemies[arrays] = 720;
-          dxEnemies[arrays] = -2;
+          dxEnemies[arrays] = -enemiesSpeed;
           spriteEnemy[arrays] = enemyLeft;
         } else if (counter % 2 == 1) {
           posXenemies[arrays] = -140;
-          dxEnemies[arrays] = 2;
+          dxEnemies[arrays] = enemiesSpeed;
           spriteEnemy[arrays] = enemyRight;
+          enemiesSpeed += 0.1;
+          spawntimer *= 0.95;
         }
       }
     }
@@ -514,7 +518,7 @@ move = {
   left: false,
   right: false,
   up: false,
-  d: false,
+  space: false,
 
   keyListener: function(event) {
     var key_state = event.type == "keydown" ? true : false;
@@ -538,8 +542,8 @@ move = {
       case 39: // høyre tast
         move.right = key_state;
         break;
-      case 68: // d tast
-        move.d = key_state;
+      case 32: // d tast
+        move.space = key_state;
         break;
       case 13: //enter tast
         if (game == false) {
@@ -613,7 +617,7 @@ function moveChar() {
       lastRight = true;
     }
     //kaster shuriken
-    if (move.d && throwing == false) {
+    if (move.space && throwing == false) {
       if (lastRight) {
         velocityShuriken = 10;
       } else {
