@@ -510,6 +510,8 @@ function charDeath() {
     curFrame = 0;
     counter = 0;
     death = true;
+    enemiesSpeed = 2;
+    spawntimer = 2000;
   }
 }
 
