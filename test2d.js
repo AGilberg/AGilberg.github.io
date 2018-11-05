@@ -194,6 +194,8 @@ class SpriteAnimationConstructor {
         enemiesContainer.samuraiLeft[arrays] == false
       ) {
         enemiesContainer.samuraiLeft[arrays] = true;
+        enemiesSpeed += 0.2;
+        spawntimer *= 0.95;
         if (counter % 2 == 0) {
           posXenemies[arrays] = 720;
           dxEnemies[arrays] = -enemiesSpeed;
@@ -202,8 +204,6 @@ class SpriteAnimationConstructor {
           posXenemies[arrays] = -140;
           dxEnemies[arrays] = enemiesSpeed;
           spriteEnemy[arrays] = enemyRight;
-          enemiesSpeed += 0.1;
-          spawntimer *= 0.95;
         }
       }
     }
