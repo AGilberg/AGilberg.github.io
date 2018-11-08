@@ -20,6 +20,7 @@ var doubleJump = false; //alltid false når man er på bakkenivå, true hvis man
 var audioCounter = 0; //brukes for å avgjøre om lyden skal skrues av eller på.
 var death = false; //avgjører om karakteren er død eller ikke
 var score = 0; //teller hvor mange samurai man har drept
+var timePassed = 0;
 
 //"currentFrame", de fleste animasjonene har en spritesheet på 10 deler, og disse variablene vil variere mellom 0 og maks antall deler i sitt spritesheet
 var curFrame = 0;
@@ -538,6 +539,17 @@ function returnToMenu() {
   menu = true;
 }
 
+//teller hvor mange sekunder man har vært i spillet
+setInterval(() => {
+  if (game == true) {
+    if (death == false) {
+      timePassed++;
+    }
+  } else {
+    timePassed = 0;
+  }
+}, 1000);
+
 //spawner arrows hvert andre sekund
 setInterval(() => {
   arrowX = Math.floor(Math.random() * 700);
@@ -712,7 +724,15 @@ function draw() {
     moveChar();
     drawArrow();
     if (gameOver == false) {
-      ctx.fillText("You have defeated " + score + " samurai", 195, 90);
+      ctx.fillText(
+        "You have defeated " +
+          score +
+          " samurai, in " +
+          timePassed +
+          " seconds",
+        120,
+        90
+      );
     } else {
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
