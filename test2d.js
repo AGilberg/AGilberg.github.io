@@ -1,6 +1,7 @@
 // Canvas:
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+ctx.font = "25px Arial";
 
 // Karakter:
 var posX = canvas.width / 2; // Posisjon langs x-aksen. Starter på midten.
@@ -33,6 +34,10 @@ var dxEnemies = []; //array med hastigheten til enemies
 var srcXenemies = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
 var spriteEnemy = []; //array med hvilken animasjon enemies skal ha
 var positionModifier; //blir brukt for hitbox registrering for enemies, siden sprites er ujevn.
+
+// Arrow:
+var arrowX;
+var arrowY;
 
 // Shuriken:
 var posShuriken; //x posisjonen til shuriken man kaster
@@ -87,6 +92,8 @@ enemyRight.src = "img/enemyRight.png";
 var enemyLeft = new Image();
 enemyLeft.src = "img/enemyLeft.png";
 var direction = new Image();
+var arrow = new Image();
+arrow.src = "img/arrow.png";
 
 //Class hvor man sender inn informasjon om sprites som skal bli tegnet, og funksjoner for å tegne dem.
 class SpriteAnimationConstructor {
@@ -420,6 +427,7 @@ canvas.addEventListener("click", function(event) {
     posY = groundLevel;
     game = true;
     menu = false;
+    arrowY = 600;
   }
   if (clicked(instructionsBox, true)) {
     menu = false;
@@ -506,7 +514,9 @@ function charDeath() {
     enemiesSpeed = 2;
     spawntimer = 2000;
     setTimeout(() => {
-      gameOver = true;
+      if (death == true) {
+        gameOver = true;
+      }
     }, 3000);
   }
 }
@@ -521,7 +531,26 @@ function returnToMenu() {
   score = 0;
   death = false;
   gameOver = false;
+  counter = 0;
   menu = true;
+}
+
+setInterval(() => {
+  arrowX = Math.floor(Math.random() * 700);
+  arrowY = -50;
+}, 2000);
+
+function drawArrow() {
+  arrowY += 4;
+  ctx.drawImage(arrow, arrowX, arrowY, 20, 50);
+  if (
+    arrowY > posY - 40 &&
+    arrowY < posY + 70 &&
+    arrowX > posX + 20 &&
+    arrowX < posX + 40
+  ) {
+    charDeath();
+  }
 }
 
 //objekt med keylistener event for forskjellige knappetrykk
@@ -566,6 +595,7 @@ move = {
             posY = groundLevel;
             game = true;
             menu = false;
+            arrowY = 600;
           }
           if (menuCounter == 1) {
             instructions = true;
@@ -674,6 +704,7 @@ function draw() {
     shurikenSprite.drawShuriken();
     enemySprite.chooseEnemy();
     moveChar();
+    drawArrow();
     if (gameOver == false) {
       ctx.fillText("You have defeated " + score + " samurai", 195, 90);
     } else {
@@ -732,8 +763,6 @@ function creditsDraw() {
   ctx.rect(0, 0, 720, 480);
   ctx.stroke();
 }
-
-ctx.font = "25px Arial";
 
 document.addEventListener("keydown", move.keyListener);
 document.addEventListener("keyup", move.keyListener);
