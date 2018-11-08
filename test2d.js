@@ -45,6 +45,7 @@ var credits = false;
 var instructions = false;
 var game = false;
 var menuCounter = 0; //variabel for å bruke piltastene på menyen
+var gameOver = false;
 
 var counter = 0; //variabel som blir brukt for telling i animasjonsfunksjon
 var enemiesSpeed = 2;
@@ -428,16 +429,8 @@ canvas.addEventListener("click", function(event) {
     menu = false;
     credits = true;
   }
-  if (clicked(backButton, false)) {
-    credits = false;
-    instructions = false;
-    game = false;
-    for (var enemies in enemiesContainer.samuraiLeft) {
-      enemiesContainer.samuraiLeft[enemies] = false;
-    }
-    score = 0;
-    death = false;
-    menu = true;
+  if (clicked(backButton, false) && gameOver == false) {
+    returnToMenu();
   }
 });
 
@@ -512,7 +505,23 @@ function charDeath() {
     death = true;
     enemiesSpeed = 2;
     spawntimer = 2000;
+    setTimeout(() => {
+      gameOver = true;
+    }, 3000);
   }
+}
+
+function returnToMenu() {
+  credits = false;
+  instructions = false;
+  game = false;
+  for (var enemies in enemiesContainer.samuraiLeft) {
+    enemiesContainer.samuraiLeft[enemies] = false;
+  }
+  score = 0;
+  death = false;
+  gameOver = false;
+  menu = true;
 }
 
 //objekt med keylistener event for forskjellige knappetrykk
@@ -544,8 +553,11 @@ move = {
       case 39: // høyre tast
         move.right = key_state;
         break;
-      case 32: // d tast
+      case 32: // spacebar tast
         move.space = key_state;
+        if (gameOver == true) {
+          returnToMenu();
+        }
         break;
       case 13: //enter tast
         if (game == false) {
@@ -662,21 +674,22 @@ function draw() {
     shurikenSprite.drawShuriken();
     enemySprite.chooseEnemy();
     moveChar();
-    if (death == false) {
-      ctx.fillText("You have defeated " + score + " samurai", 180, 90);
+    if (gameOver == false) {
+      ctx.fillText("You have defeated " + score + " samurai", 195, 90);
     } else {
-      ctx.fillText("GAME OVER, you defeated " + score + " samurai", 130, 90);
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillText("GAME OVER", 270, 150);
+      ctx.fillText("Press spacebar to return to the menu", 145, 200);
     }
-  }
-  if (menu == true) {
+  } else if (menu == true) {
     menuDraw();
     startMenuSprite.animateMainChar();
-  }
-  if (instructions == true) {
+  } else if (instructions == true) {
     instructionsDraw();
     drawBackButton();
-  }
-  if (credits == true) {
+  } else if (credits == true) {
     creditsDraw();
     drawBackButton();
   }
@@ -687,7 +700,6 @@ function draw() {
 //meny funksjonen
 function menuDraw() {
   ctx.drawImage(menuBackground, 0, 0, 1453, 1024, 0, 0, 720, 480);
-  ctx.font = "25px Arial";
   ctx.fillStyle = "#000000";
   ctx.fillText("START GAME", 230, 90);
   ctx.fillText("INSTRUCTIONS", 218, 140);
@@ -720,6 +732,8 @@ function creditsDraw() {
   ctx.rect(0, 0, 720, 480);
   ctx.stroke();
 }
+
+ctx.font = "25px Arial";
 
 document.addEventListener("keydown", move.keyListener);
 document.addEventListener("keyup", move.keyListener);
