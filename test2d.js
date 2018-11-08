@@ -20,7 +20,7 @@ var doubleJump = false; //alltid false når man er på bakkenivå, true hvis man
 var audioCounter = 0; //brukes for å avgjøre om lyden skal skrues av eller på.
 var death = false; //avgjører om karakteren er død eller ikke
 var score = 0; //teller hvor mange samurai man har drept
-var timePassed = 0;
+var timePassed = 0; //holder info om hvor lenge et spill har foregått
 
 //"currentFrame", de fleste animasjonene har en spritesheet på 10 deler, og disse variablene vil variere mellom 0 og maks antall deler i sitt spritesheet
 var curFrame = 0;
@@ -35,8 +35,8 @@ var dxEnemies = []; //array med hastigheten til enemies
 var srcXenemies = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
 var spriteEnemy = []; //array med hvilken animasjon enemies skal ha
 var positionModifier; //blir brukt for hitbox registrering for enemies, siden sprites er ujevn.
-var enemiesSpeed = 2; //hastigheten til enemies
-var spawntimer = 2000; //del av matematisk algoritme som avgjør når enemies spawner
+var enemiesSpeed = 3; //hastigheten til enemies
+var spawntimer = 1200; //del av matematisk algoritme som avgjør når enemies spawner
 
 // Arrow: x og y posisjon til arrow
 var arrowX;
@@ -205,8 +205,10 @@ class SpriteAnimationConstructor {
         enemiesContainer.samuraiLeft[arrays] == false
       ) {
         enemiesContainer.samuraiLeft[arrays] = true;
-        enemiesSpeed += 0.2;
-        spawntimer *= 0.95;
+        enemiesSpeed += 0.1;
+        if (spawntimer > 500) {
+          spawntimer *= 0.95;
+        }
         if (counter % 2 == 0) {
           posXenemies[arrays] = 720;
           dxEnemies[arrays] = -enemiesSpeed;
@@ -430,7 +432,6 @@ canvas.addEventListener("click", function(event) {
     posY = groundLevel;
     game = true;
     menu = false;
-    arrowY = 600;
   }
   if (clicked(instructionsBox, true)) {
     menu = false;
@@ -515,7 +516,7 @@ function charDeath() {
     counter = 0;
     death = true;
     enemiesSpeed = 2;
-    spawntimer = 2000;
+    spawntimer = 1200;
     setTimeout(() => {
       if (death == true) {
         gameOver = true;
@@ -537,6 +538,7 @@ function returnToMenu() {
   gameOver = false;
   counter = 0;
   menu = true;
+  arrowY = -400;
 }
 
 //teller hvor mange sekunder man har vært i spillet
@@ -552,8 +554,10 @@ setInterval(() => {
 
 //spawner arrows hvert andre sekund
 setInterval(() => {
-  arrowX = Math.floor(Math.random() * 700);
-  arrowY = -50;
+  if (game == true) {
+    arrowX = Math.floor(Math.random() * 700);
+    arrowY = -50;
+  }
 }, 2000);
 
 //tegner arrows + hitbox
@@ -612,7 +616,6 @@ move = {
             posY = groundLevel;
             game = true;
             menu = false;
-            arrowY = 600;
           }
           if (menuCounter == 1) {
             instructions = true;
@@ -737,8 +740,13 @@ function draw() {
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#FFFFFF";
-      ctx.fillText("GAME OVER", 270, 150);
-      ctx.fillText("Press spacebar to return to the menu", 145, 200);
+      ctx.fillText("GAME OVER", 275, 150);
+      ctx.fillText("Press spacebar to return to the menu", 150, 250);
+      ctx.fillText(
+        "samurai defeated: " + score + ", time: " + timePassed,
+        200,
+        200
+      );
     }
   } else if (menu == true) {
     menuDraw();
