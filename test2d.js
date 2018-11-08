@@ -34,8 +34,10 @@ var dxEnemies = []; //array med hastigheten til enemies
 var srcXenemies = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
 var spriteEnemy = []; //array med hvilken animasjon enemies skal ha
 var positionModifier; //blir brukt for hitbox registrering for enemies, siden sprites er ujevn.
+var enemiesSpeed = 2; //hastigheten til enemies
+var spawntimer = 2000; //del av matematisk algoritme som avgjør når enemies spawner
 
-// Arrow:
+// Arrow: x og y posisjon til arrow
 var arrowX;
 var arrowY;
 
@@ -53,9 +55,7 @@ var menuCounter = 0; //variabel for å bruke piltastene på menyen
 var gameOver = false;
 
 var counter = 0; //variabel som blir brukt for telling i animasjonsfunksjon
-var enemiesSpeed = 2;
 var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
-var spawntimer = 2000;
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
@@ -83,6 +83,8 @@ var imageSound = new Image();
 imageSound.src = muteSound.src;
 var menuBackground = new Image();
 menuBackground.src = "img/Ninja.jpg";
+var gameBackground = new Image();
+gameBackground.src = "img/background1.png";
 var imageBack = new Image();
 imageBack.src = "img/back.jpg";
 var deathAnimation = new Image();
@@ -521,6 +523,7 @@ function charDeath() {
   }
 }
 
+//endrer på noen variabler slik at man kan starte et nytt game fra menyen
 function returnToMenu() {
   credits = false;
   instructions = false;
@@ -535,11 +538,13 @@ function returnToMenu() {
   menu = true;
 }
 
+//spawner arrows hvert andre sekund
 setInterval(() => {
   arrowX = Math.floor(Math.random() * 700);
   arrowY = -50;
 }, 2000);
 
+//tegner arrows + hitbox
 function drawArrow() {
   arrowY += 4;
   ctx.drawImage(arrow, arrowX, arrowY, 20, 50);
@@ -698,6 +703,7 @@ function moveChar() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (game == true) {
+    ctx.drawImage(gameBackground, 0, 0, 720, 480);
     findAnimation();
     drawSound();
     drawBackButton();
@@ -730,7 +736,6 @@ function draw() {
 
 //meny funksjonen
 function menuDraw() {
-  ctx.drawImage(menuBackground, 0, 0, 1453, 1024, 0, 0, 720, 480);
   ctx.fillStyle = "#000000";
   ctx.fillText("START GAME", 230, 90);
   ctx.fillText("INSTRUCTIONS", 218, 140);
