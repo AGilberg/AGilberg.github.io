@@ -554,7 +554,7 @@ setInterval(() => {
 
 //spawner arrows hvert andre sekund
 setInterval(() => {
-  if (game == true) {
+  if ((game == true) && (score > 20)) {
     arrowX = Math.floor(Math.random() * 700);
     arrowY = -50;
   }
