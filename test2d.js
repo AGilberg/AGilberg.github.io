@@ -766,7 +766,7 @@ function draw() {
 function menuDraw() {
   ctx.fillStyle = "#000000";
   ctx.fillText("START GAME", 230, 90);
-  ctx.fillText("INSTRUCTIONS", 218, 140);
+  ctx.fillText("INSTRUCTIONS", 215, 140);
   ctx.fillText("CREDITS", 252, 190);
 
   if (menuCounter == 0) {
