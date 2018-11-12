@@ -1,3 +1,13 @@
+// Mobil sjekk:
+var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
+  navigator.userAgent.toLowerCase()
+);
+if (mobile) {
+  document.body.innerHTML =
+    '<canvas id="canvas" width="720" height="480"></canvas>';
+  document.styleSheets[0].disabled = true;
+}
+
 // Canvas:
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -154,7 +164,7 @@ class SpriteAnimationConstructor {
       posShuriken += velocityShuriken;
       if (posShuriken < 0) {
         throwing = false;
-      } else if (posShuriken > 720) {
+      } else if (posShuriken > canvas.width) {
         throwing = false;
       }
 
@@ -210,7 +220,7 @@ class SpriteAnimationConstructor {
           spawntimer *= 0.95;
         }
         if (counter % 2 == 0) {
-          posXenemies[arrays] = 720;
+          posXenemies[arrays] = canvas.width;
           dxEnemies[arrays] = -enemiesSpeed;
           spriteEnemy[arrays] = enemyLeft;
         } else if (counter % 2 == 1) {
@@ -236,7 +246,7 @@ class SpriteAnimationConstructor {
           }
           positionModifier = 40;
         } else if (dxEnemies[arrays] > 0) {
-          if (posXenemies[arrays] > 720) {
+          if (posXenemies[arrays] > canvas.width) {
             enemiesContainer.samuraiLeft[arrays] = false;
           }
           positionModifier = 100;
@@ -416,6 +426,32 @@ canvas.addEventListener("click", function(event) {
     audioCounter++;
   }
 
+  //kode for spilling på mobil
+  if (mobile) {
+    if (game) {
+      if (event.y - rect.top < 240) {
+        if (dy == 0) {
+          dy += 30;
+          doubleJump = false;
+          curFrame = 0;
+        }
+      } else if (event.y - rect.top > 240) {
+        if (event.x - rect.left > 360) {
+          lastRight = true;
+          velocityShuriken = 10;
+          throwShuriken();
+        } else if (event.x - rect.left < 360) {
+          lastRight = false;
+          velocityShuriken = -10;
+          throwShuriken();
+        }
+      }
+    }
+    if (gameOver) {
+      returnToMenu();
+    }
+  }
+
   //funskjon som avgjør om man har klikket innenfor et visst område
   function clicked(button, state) {
     return (
@@ -445,6 +481,11 @@ canvas.addEventListener("click", function(event) {
     returnToMenu();
   }
 });
+
+// canvas.addEventListener("ontouchend", function(event) {
+//   move.left = false;
+//   move.right = false;
+// });
 
 canvas.addEventListener("mousemove", function(event) {
   var rect = canvas.getBoundingClientRect();
@@ -718,7 +759,7 @@ function moveChar() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (game == true) {
-    ctx.drawImage(gameBackground, 0, 0, 720, 480);
+    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     findAnimation();
     drawSound();
     drawBackButton();
@@ -784,25 +825,17 @@ function menuDraw() {
 //instructions funksjonen
 function instructionsDraw() {
   ctx.fillStyle = "#FFFFFF";
-  ctx.fillRect(0, 0, 720, 480);
-  ctx.rect(0, 0, 720, 480);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.stroke();
 }
 
 //credits funksjonen
 function creditsDraw() {
   ctx.fillStyle = "#FFFFFF";
-  ctx.fillRect(0, 0, 720, 480);
-  ctx.rect(0, 0, 720, 480);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.stroke();
-}
-
-var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
-  navigator.userAgent.toLowerCase()
-);
-if (mobile) {
-  alert("Visit this on a Computer for Better View");
-} else {
 }
 
 document.addEventListener("keydown", move.keyListener);
