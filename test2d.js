@@ -554,7 +554,7 @@ setInterval(() => {
 
 //spawner arrows hvert andre sekund
 setInterval(() => {
-  if ((game == true) && (score > 20)) {
+  if (game == true && score > 20) {
     arrowX = Math.floor(Math.random() * 700);
     arrowY = -50;
   }
@@ -795,6 +795,14 @@ function creditsDraw() {
   ctx.fillRect(0, 0, 720, 480);
   ctx.rect(0, 0, 720, 480);
   ctx.stroke();
+}
+
+var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
+  navigator.userAgent.toLowerCase()
+);
+if (mobile) {
+  alert("Visit this on a Computer for Better View");
+} else {
 }
 
 document.addEventListener("keydown", move.keyListener);
