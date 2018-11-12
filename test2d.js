@@ -4,6 +4,8 @@ var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
 );
 if (mobile) {
   document.body.innerHTML =
+    '<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=no"/>' +
+    "<br>" +
     '<canvas id="canvas" width="720" height="480"></canvas>';
   document.styleSheets[0].disabled = true;
 }
@@ -435,12 +437,12 @@ canvas.addEventListener("click", function(event) {
           doubleJump = false;
           curFrame = 0;
         }
-      } else if (event.y - rect.top > 240) {
+      } else if (event.y - rect.top > 240 && !throwing) {
         if (event.x - rect.left > 360) {
           lastRight = true;
           velocityShuriken = 10;
           throwShuriken();
-        } else if (event.x - rect.left < 360) {
+        } else if (event.x - rect.left < 360 && !throwing) {
           lastRight = false;
           velocityShuriken = -10;
           throwShuriken();
