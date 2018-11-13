@@ -171,6 +171,11 @@ select {
   height: 20px;
   padding-bottom: 120px;
 }
+
+#showCanvas {
+  width: 100px;
+  height: 40px;
+}
 /* ----------------------------------------------- */
 
 /* --------------------- Våre lokaler sin css ---- */

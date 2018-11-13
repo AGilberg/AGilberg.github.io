@@ -8,7 +8,7 @@ if (mobile) {
     "<br>" +
     '<canvas id="canvas" width="720" height="480"></canvas>' +
     "<br>" +
-    '<center><button type="button" id="showCanvas" style="width: 100px; height:50px" onclick="goFullScreen()">Fullscreen</button></center>';
+    '<center><button type="button" id="showCanvas" class="button" style="width: 100px; height:50px" onclick="goFullScreen()">Fullscreen</button></center>';
   document.styleSheets[0].disabled = true;
 }
 //kode for fullskjerm på mobil
