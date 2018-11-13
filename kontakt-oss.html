@@ -3,70 +3,70 @@
   <head>
     <meta charset="utf-8">
     <title>Hjemmeside G25</title>
-<link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 
   </head>
   <body>
 
-<nav>
-  <ul id="meny">
-    <li><a href="index.html"> Hjem </a></li>
-    <li><a href="dokumentasjon.html"> Dokumentasjon </a></li>
-    <li><a class="active" href="kontakt-oss.html"> Kontakt oss </a></li>
-    <li><a href="vaare-lokaler.html"> Våre lokaler </a></li>
-  </ul>
-</nav>
+    <nav>
+      <ul id="meny">
+        <li><a href="index.html"> Hjem </a></li>
+        <li><a href="dokumentasjon.html"> Dokumentasjon </a></li>
+        <li><a class="active" href="kontakt-oss.html"> Kontakt oss </a></li>
+        <li><a href="vaare-lokaler.html"> Våre lokaler </a></li>
+      </ul>
+    </nav>
 
                         <br> <br>
 
 
-<div id="div1">
-  <h2 class="border"> Ønsker du å kontakte oss, har du et spørmsål eller vil du bare gi en tilbakemelding? <br> Fyll ut nedenfor!</h2> <br> <br> <br>
-</div>
-
-
-<form id="skjema">
-      <!-- Navn -->
-    <label for="first-name">Fornavn </label>  <br>
-    <input type="text" id="label1" name="first-name" placeholder="Skriv her ..." oninput="validering()">
-     <img id="for_sjekk" src="img/false-bilde.png" src="img/check-bilde.jpg"/></input> <br> <br>
-
-
-      <!-- Etternavn -->
-    <label for="last-name">Etternavn </label>  <br>
-    <input type="text" id="label2" name="last-name" placeholder="Skriv her ..." oninput="validering()">
-     <img id="etter_sjekk" src="img/false-bilde.png" src="img/check-bilde.jpg"/></input> <br> <br>
-
-
-      <!-- Email -->
-    <label for="email">E-mail </label> <br>
-    <input type="email" id="label3" name="email" placeholder="Skriv her ..." oninput="validering()">
-     <img id="email_sjekk" src="img/false-bilde.png" src="img/check-bilde.jpg"/></input> <br> <br> <br>
-
-
-      <!-- Liste med valg -->
-    <label id="label4" for="tilbakemelding"> Hva gjelder din hendvendelse? </label> <br>
-    <select name="valg">
-        <option value="1" selected> Tilbakemelding (ris/ros) </option>
-        <option value="2"> Spørsmål </option>
-        <option value="3"> Bugs/problem med spillet </option>
-        <option value="4"> Nye ideer/forbedringspotensiale </option>
-    </select> <br> <br> <br> <br>
-
-
-      <!--  Kommentarfelt -->
-    <label for="textarea"> Skriv din kommentar her! </label> <br>
-    <form>
-      <textarea id="label5" placeholder="Skriv her ..." oninput="validering()"></textarea> <img id="kommentar_sjekk" src="img/false-bilde.png" src="img/check-bilde.jpg"/>
-    </form> <br> <br>
-
-
-      <!-- Knapp nederst på siden -->
-    <div id="knapp">
-        <button onclick="knappTrykk()" class="button button1"> Send inn! </button>
+    <div id="div1">
+      <h2 class="border"> Ønsker du å kontakte oss, har du et spørmsål eller vil du bare gi en tilbakemelding? <br> Fyll ut nedenfor!</h2> <br> <br> <br>
     </div>
 
-</form>
-<script src="javascript/kontakt-oss.js" charset="utf-8"></script>
+
+    <form id="skjema">
+      <!-- Navn -->
+      <label for="first-name">Fornavn </label>  <br>
+      <input type="text" id="label1" name="first-name" placeholder="Skriv her ..." oninput="validering()">
+       <img id="for_sjekk" src="img/false-bilde.png" src="img/check-bilde.jpg"/></input> <br> <br>
+
+
+        <!-- Etternavn -->
+      <label for="last-name">Etternavn </label>  <br>
+      <input type="text" id="label2" name="last-name" placeholder="Skriv her ..." oninput="validering()">
+       <img id="etter_sjekk" src="img/false-bilde.png" src="img/check-bilde.jpg"/></input> <br> <br>
+
+
+        <!-- Email -->
+      <label for="email">E-mail </label> <br>
+      <input type="email" id="label3" name="email" placeholder="Skriv her ..." oninput="validering()">
+       <img id="email_sjekk" src="img/false-bilde.png" src="img/check-bilde.jpg"/></input> <br> <br> <br>
+
+
+        <!-- Liste med valg -->
+      <label id="label4" for="tilbakemelding"> Hva gjelder din hendvendelse? </label> <br>
+      <select name="valg">
+          <option value="1" selected> Tilbakemelding (ris/ros) </option>
+          <option value="2"> Spørsmål </option>
+          <option value="3"> Bugs/problem med spillet </option>
+          <option value="4"> Nye ideer/forbedringspotensiale </option>
+      </select> <br> <br> <br> <br>
+
+
+        <!--  Kommentarfelt -->
+      <label for="textarea"> Skriv din kommentar her! </label> <br>
+      <form>
+        <textarea id="label5" placeholder="Skriv her ..." oninput="validering()"></textarea> <img id="kommentar_sjekk" src="img/false-bilde.png" src="img/check-bilde.jpg"/>
+      </form> <br> <br>
+
+
+        <!-- Knapp nederst på siden -->
+    <div id="knapp">
+          <button onclick="knappTrykk()" class="button button1"> Send inn! </button>
+    </div>
+
+    </form>
+    <script src="javascript/kontakt-oss.js" charset="utf-8"></script>
   </body>
 </html>
