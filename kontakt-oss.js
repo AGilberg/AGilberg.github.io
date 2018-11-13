@@ -12,27 +12,27 @@ function validering() {
   // Dette er ''if'' setninger som validerer om du har fylt kriteret. Om du har det bytter bilde fornavn
   // rødt kryss til grønt kryss!
   if (for_1 >= 2) {
-    document.getElementById("for_sjekk").src = "check-bilde.jpg";
+    document.getElementById("for_sjekk").src = "img/check-bilde.jpg";
   } else {
-    document.getElementById("for_sjekk").src = "false-bilde.png";
+    document.getElementById("for_sjekk").src = "img/false-bilde.png";
   }
 
   if (etter_1 >= 2) {
-    document.getElementById("etter_sjekk").src = "check-bilde.jpg";
+    document.getElementById("etter_sjekk").src = "img/check-bilde.jpg";
   } else {
-    document.getElementById("etter_sjekk").src = "false-bilde.png";
+    document.getElementById("etter_sjekk").src = "img/false-bilde.png";
   }
 
   if (komm_1 >= 5) {
-    document.getElementById("kommentar_sjekk").src = "check-bilde.jpg";
+    document.getElementById("kommentar_sjekk").src = "img/check-bilde.jpg";
   } else {
-    document.getElementById("kommentar_sjekk").src = "false-bilde.png";
+    document.getElementById("kommentar_sjekk").src = "img/false-bilde.png";
   }
 
   if (email_1 >= 6 && email.includes("@")) {
-    document.getElementById("email_sjekk").src = "check-bilde.jpg";
+    document.getElementById("email_sjekk").src = "img/check-bilde.jpg";
   } else {
-    document.getElementById("email_sjekk").src = "false-bilde.png";
+    document.getElementById("email_sjekk").src = "img/false-bilde.png";
   }
 }
 

@@ -90,7 +90,7 @@ var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "kl
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
-audio.src = "sakura.mp3";
+audio.src = "sound/sakura.mp3";
 var shuriken = new Image();
 shuriken.src = "img/shuriken.png";
 var animation = new Image();
