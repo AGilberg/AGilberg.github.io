@@ -855,7 +855,7 @@ function instructionsDraw() {
 
 //history funksjonen
 function historyDraw() {
-  ctx.fillStyle = "#FFE6B3";
+  ctx.fillStyle = "#FFBD9E";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.stroke();
