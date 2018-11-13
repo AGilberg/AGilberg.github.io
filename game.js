@@ -11,26 +11,30 @@ if (mobile) {
     '<center><button type="button" id="showCanvas" style="width: 100px; height:50px" onclick="goFullScreen()">Fullscreen</button></center>';
   document.styleSheets[0].disabled = true;
 }
-//kode for fullskjerm på mobil
 function goFullScreen() {
-  if (window.innerHeight < window.innerWidth) {
-    if (canvas.requestFullScreen) canvas.requestFullScreen();
-    else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
-    else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
-    screen.orientation.lock("landscape-primary");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  if (!mobile) {
+    document.getElementById("showCanvas").style.visibility = "hidden";
     canvas.style.visibility = "visible";
   } else {
-    alert("Please enter landscape mode");
+    if (window.innerHeight < window.innerWidth) {
+      if (canvas.requestFullScreen) canvas.requestFullScreen();
+      else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
+      else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
+      screen.orientation.lock("landscape-primary");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.style.visibility = "visible";
+    } else {
+      alert("Please enter landscape mode");
+    }
   }
 }
 
 // Canvas:
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+//ctx.font = "25px Arial";
 ctx.font = "25px freedom";
-if (mobile) canvas.style.visibility = "hidden";
 
 // Karakter:
 var posX = canvas.width / 2; // Posisjon langs x-aksen. Starter på midten.
@@ -76,9 +80,9 @@ var posShuriken; //x posisjonen til shuriken man kaster
 var srcXShuriken = 0; //definerer hvor på spritesheeten man skal starte å "klippe"
 var velocityShuriken = 0; //definerer hastigheten til shuriken
 
-// Meny: variabler som endres avhengig av om man er på menyen, spillet, history osv.
+// Meny: variabler som endres avhengig av om man er på menyen, spillet, credits osv.
 var menu = true;
-var history = false;
+var credits = false;
 var instructions = false;
 var game = false;
 var menuCounter = 0; //variabel for å bruke piltastene på menyen
@@ -89,7 +93,7 @@ var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "kl
 
 // Audio og sprites/grafikk:
 var audio = new Audio();
-audio.src = "sound/sakura.mp3";
+audio.src = "sakura.mp3";
 var shuriken = new Image();
 shuriken.src = "img/shuriken.png";
 var animation = new Image();
@@ -417,7 +421,7 @@ class menuBoxConstructor {
   }
 }
 
-const historyBox = new menuBoxConstructor(240, 367, 167, 194);
+const creditsBox = new menuBoxConstructor(240, 367, 167, 194);
 const instructionsBox = new menuBoxConstructor(210, 410, 117, 147);
 const startGame = new menuBoxConstructor(223, 395, 64, 98);
 const backButton = new menuBoxConstructor(0, 50, 0, 50);
@@ -488,9 +492,9 @@ canvas.addEventListener("click", function(event) {
     menu = false;
     instructions = true;
   }
-  if (clicked(historyBox, true)) {
+  if (clicked(creditsBox, true)) {
     menu = false;
-    history = true;
+    credits = true;
   }
   if (clicked(backButton, false) && !gameOver) {
     returnToMenu();
@@ -521,7 +525,7 @@ canvas.addEventListener("mousemove", function(event) {
   if (mouseOver(instructionsBox, false)) {
     menuCounter = 1;
   }
-  if (mouseOver(historyBox, false)) {
+  if (mouseOver(creditsBox, false)) {
     menuCounter = 2;
   }
 });
@@ -583,7 +587,7 @@ function charDeath() {
 
 //endrer på noen variabler slik at man kan starte et nytt game fra menyen
 function returnToMenu() {
-  history = false;
+  credits = false;
   instructions = false;
   game = false;
   for (var enemies in enemiesContainer.samuraiLeft) {
@@ -680,7 +684,7 @@ move = {
             menu = false;
           }
           if (menuCounter == 2) {
-            history = true;
+            credits = true;
             menu = false;
           }
         }
@@ -809,12 +813,11 @@ function draw() {
   } else if (menu) {
     menuDraw();
     startMenuSprite.animateMainChar();
-    timePassed = 0;
   } else if (instructions) {
     instructionsDraw();
     drawBackButton();
-  } else if (history) {
-    historyDraw();
+  } else if (credits) {
+    creditsDraw();
     drawBackButton();
   }
 
@@ -824,10 +827,9 @@ function draw() {
 //meny funksjonen
 function menuDraw() {
   ctx.fillStyle = "#000000";
-  ctx.font = "25px freedom";
   ctx.fillText("START GAME", 230, 90);
   ctx.fillText("INSTRUCTIONS", 215, 140);
-  ctx.fillText("HISTORY", 252, 190);
+  ctx.fillText("CREDITS", 252, 190);
 
   if (menuCounter == 0) {
     posX = 390;
@@ -849,44 +851,12 @@ function instructionsDraw() {
   ctx.stroke();
 }
 
-//history funksjonen
-function historyDraw() {
-  ctx.fillStyle = "#FFE6B3";
+//credits funksjonen
+function creditsDraw() {
+  ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.stroke();
-  ctx.fillStyle = "#000000";
-  ctx.font = "15px freedom";
-  ctx.fillText(
-    "På tidlig 1400-tallet i Japan var det en tung tid for folk som levde i den laveste klassen.",
-    70,
-    110
-  );
-  ctx.fillText(
-    "Bønder og fattige ble tvunget til å jobbe lange dager og måtte betale mye i skatt,",
-    70,
-    140
-  );
-  ctx.fillText("dette førte til stor frustrasjon som bygde seg opp.", 70, 170);
-
-  ctx.fillText("Vilkårene ble hardere og hardere og livet var tungt,", 70, 220);
-  ctx.fillText(
-    "for å komme seg ut av undertrykkelsen begynte de å trene kampsporten “ninjutsu” ",
-    70,
-    250
-  );
-  ctx.fillText("(kunsten å holde seg skjult). ", 70, 280);
-  ctx.fillText(
-    "Ut fra dette kom ninjane og de måtte kjempe mot samuraiene,",
-    70,
-    340
-  );
-  ctx.fillText(
-    "spillet baserer seg på kampen mellom ninjane og samuraiene.",
-    70,
-    370
-  );
-  ctx.font = "25px freedom";
 }
 
 document.addEventListener("keydown", move.keyListener);
@@ -895,7 +865,7 @@ document.addEventListener("keyup", moveMenu.keyListener);
 document.addEventListener(
   "keydown",
   function(e) {
-    // space and arrow keys, prevent scrolling
+    // space and arrow keys
     if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
       e.preventDefault();
     }

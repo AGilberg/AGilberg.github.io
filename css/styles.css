@@ -1,14 +1,12 @@
 /* CSS for hovedsiden og meny--------------- */
 
 @font-face {
-  font-family: zorque;
-  src: url(../zorque/zorque.ttf);
-  font-family: zorque;
-  src: url(../zorque/zorque.ttf);
+  font-family: freedom;
+  src: url(../freedom/freedom.ttf);
 }
 
 #meny {
-  font-family: zorque;
+  font-family: freedom;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -47,7 +45,7 @@ li a:hover {
   width: 720px;
   background-color: rgb(191, 35, 45);
   text-align: center;
-  font-family: zorque;
+  font-family: freedom;
   font-size: 60px;
 }
 /* ------------------------------------------- */
