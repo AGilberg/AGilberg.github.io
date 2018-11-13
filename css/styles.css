@@ -3,6 +3,8 @@
 @font-face {
   font-family: zorque;
   src: url(../zorque/zorque.ttf);
+  font-family: zorque;
+  src: url(../zorque/zorque.ttf);
 }
 
 #meny {
