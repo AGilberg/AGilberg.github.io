@@ -29,9 +29,14 @@ function goFullScreen() {
 // Canvas:
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+<<<<<<< HEAD:game.js
+//ctx.font = "25px Arial";
+ctx.font = "25px zorque";
+=======
 if (mobile) canvas.style.visibility = "hidden";
 
 ctx.font = "25px Arial";
+>>>>>>> fe34b014d28582fca3f1aa90f4b81a6f32cd7033:javascript/game.js
 
 // Karakter:
 var posX = canvas.width / 2; // Posisjon langs x-aksen. Starter på midten.
