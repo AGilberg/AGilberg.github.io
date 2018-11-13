@@ -1,44 +1,43 @@
 /* CSS for hovedsiden og meny--------------- */
 
 @font-face {
-    font-family: zorque;
-    src: url(zorque/zorque.ttf);
+  font-family: zorque;
+  src: url(../zorque/zorque.ttf);
 }
 
 #meny {
-    font-family: zorque;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: rgb(255, 204, 158);
-    border-style: groove;
-    border-color: rgb(102, 102, 51);
-    font-size: 20px;
+  font-family: zorque;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: rgb(255, 204, 158);
+  border-style: groove;
+  border-color: rgb(102, 102, 51);
+  font-size: 20px;
 }
 
 li {
-    float: left;
-    border-right: 3px solid black;
+  float: left;
+  border-right: 3px solid black;
 }
 
 li a {
-    display: block;
-    color: black;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-weight: bold;
-    font-style: oblique;
-
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-weight: bold;
+  font-style: oblique;
 }
 
 li a:hover {
-    background-color: rgb(255, 230, 179);
+  background-color: rgb(255, 230, 179);
 }
 
 .active {
-    background-color: rgb(255, 230, 179);
+  background-color: rgb(255, 230, 179);
 }
 
 #gameTitle {
@@ -48,11 +47,8 @@ li a:hover {
   text-align: center;
   font-family: zorque;
   font-size: 60px;
-
 }
 /* ------------------------------------------- */
-
-
 
 /* ----- Generell html kode ------------------ */
 
@@ -62,11 +58,8 @@ html {
   padding-right: 20px;
   background-image: url(https://wallpapertag.com/wallpaper/full/2/4/8/361467-japanese-background-1920x1200-for-samsung.jpg);
   background-size: cover;
-
 }
 /* ----------------------------------------------*/
-
-
 
 /* Dette er css for kontakt oss siden ---------- */
 
@@ -74,7 +67,9 @@ html {
   text-align: center;
 }
 
-input[type=text], input[type=email], input[type=textarea] {
+input[type="text"],
+input[type="email"],
+input[type="textarea"] {
   width: 30%;
   padding: 9px 10px;
   margin: 8px 0;
@@ -83,7 +78,6 @@ input[type=text], input[type=email], input[type=textarea] {
   border-color: rgb(102, 102, 51);
   border-width: thick;
 }
-
 
 label {
   border-style: double;
@@ -97,7 +91,6 @@ label {
   padding-bottom: 2px;
   border-color: black;
 }
-
 
 h2 {
   text-align: center;
@@ -114,12 +107,11 @@ h2 {
   padding-bottom: 4px;
 }
 
-
-#div1, #div2 {
+#div1,
+#div2 {
   width: 720px;
   margin: auto;
 }
-
 
 textarea {
   width: 40%;
@@ -132,7 +124,6 @@ textarea {
   border-width: thick;
 }
 
-
 select {
   padding: 7px 8px;
   margin: 8px 0;
@@ -143,48 +134,44 @@ select {
 }
 
 .button {
-    background-color: rgb(255, 230, 179);
-    color: Black;
-    padding: 16px 32px;
-    text-align: center;
-    margin: 4px 2px;
-    transition-duration: 0.7s;
-    cursor: pointer;
+  background-color: rgb(255, 230, 179);
+  color: Black;
+  padding: 16px 32px;
+  text-align: center;
+  margin: 4px 2px;
+  transition-duration: 0.7s;
+  cursor: pointer;
 
-    border-radius: 12px;
-    border-style: groove;
-    border-color: rgb(102, 102, 51);
+  border-radius: 12px;
+  border-style: groove;
+  border-color: rgb(102, 102, 51);
 
-    font-size: 20px;
-    font-style: oblique;
-    font-weight: bold;
+  font-size: 20px;
+  font-style: oblique;
+  font-weight: bold;
 }
-
 
 .button:hover {
   background-color: rgb(245, 176, 65);
 }
 
-
 #knapp {
   text-align: center;
 }
 
-
-#for_sjekk, #etter_sjekk, #email_sjekk {
+#for_sjekk,
+#etter_sjekk,
+#email_sjekk {
   width: 20px;
   height: 20px;
 }
-
 
 #kommentar_sjekk {
   width: 20px;
   height: 20px;
-  padding-bottom:120px;
+  padding-bottom: 120px;
 }
 /* ----------------------------------------------- */
-
-
 
 /* --------------------- Våre lokaler sin css ---- */
 /* Her har vi prøvd oss litt med flexbox */
@@ -195,8 +182,7 @@ select {
   align-items: center;
 }
 
-
-.bildeGMYR>div {
+.bildeGMYR > div {
   flex-grow: 1;
   justify-content: space-evenly;
   width: 50%;
