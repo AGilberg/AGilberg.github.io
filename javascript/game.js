@@ -137,7 +137,7 @@ var direction = new Image();
 var arrow = new Image();
 arrow.src = "img/arrow.png";
 var howToPlay = new Image();
-howToPlay.src = "img/howToPlay.png";
+howToPlay.src = "img/howTo.png";
 
 //Class hvor man sender inn informasjon om sprites som skal bli tegnet, og funksjoner for å tegne dem.
 class SpriteAnimationConstructor {
