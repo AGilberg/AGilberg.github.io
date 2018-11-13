@@ -1,8 +1,11 @@
-// Mobil sjekk:
-var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
+// Mobil sjekk: (fullscreen funker bare på android telefoner)
+var mobile = /android|blackberry|mini|windows\sce|palm/i.test(
   navigator.userAgent.toLowerCase()
 );
-if (mobile) {
+// iphone sjekk:
+var iphone = /iphone|ipad|ipod|palm/i.test(navigator.userAgent.toLowerCase());
+
+if (mobile || iphone) {
   document.body.innerHTML =
     "<br>" +
     '<center><button type="button" id="showCanvas" style="width: 200px; height: 100px;" onclick="goFullScreen()">Fullscreen</button></center>' +
@@ -27,6 +30,9 @@ function goFullScreen() {
     alert("Please enter landscape mode");
   }
 }
+
+//skjuler en knapp kun for iphone brukere, siden de ikke kan bruke fullskjerm
+if (iphone) document.getElementById("showCanvas").style.visibility = "hidden";
 
 // Canvas:
 var canvas = document.getElementById("canvas");
@@ -450,7 +456,7 @@ canvas.addEventListener("click", function(event) {
   }
 
   //kode for spilling på mobil
-  if (mobile) {
+  if (mobile || iphone) {
     if (game && !death) {
       if (event.y - rect.top < 240) {
         if (dy == 0) {
@@ -555,7 +561,7 @@ function findAnimation() {
 }
 
 function drawSound() {
-  if (!mobile) {
+  if (!mobile && !iphone) {
     ctx.drawImage(imageSound, 0, 0, 512, 512, canvas.width - 55, 0, 50, 50);
   }
 }
@@ -623,7 +629,7 @@ setInterval(() => {
 
 //tegner arrows + hitbox
 function drawArrow() {
-  if (!mobile) {
+  if (!mobile && !iphone) {
     arrowY += 4;
     ctx.drawImage(arrow, arrowX, arrowY, 20, 50);
     if (
