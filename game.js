@@ -33,8 +33,8 @@ function goFullScreen() {
 // Canvas:
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-canvas.style.visibility = "hidden";
-ctx.font = "25px Arial";
+//ctx.font = "25px Arial";
+ctx.font = "25px zorque";
 
 // Karakter:
 var posX = canvas.width / 2; // Posisjon langs x-aksen. Starter på midten.

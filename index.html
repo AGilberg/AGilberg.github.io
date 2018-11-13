@@ -10,17 +10,22 @@
   </head>
   <body onload="draw()">
 
+
   <ul id="meny">
     <li><a class="active" href="index.html"> Hjem </a></li>
     <li><a href="dokumentasjon.html"> Dokumentasjon </a></li>
     <li><a href="kontakt-oss.html"> Kontakt oss </a></li>
     <li><a href="vaare-lokaler.html"> Våre lokaler </a></li>
-
-
   </ul>
   <br>
-  <center><button type="button" id="showCanvas" onclick="goFullScreen()">Play</button></center>
-  <canvas id="canvas" width="720" height="480" ></canvas>
+
+
+<div id="gameTitle" class="border">
+  NinjaFighter
+</div>
+
+
+  <canvas id="canvas" width="720" height="480" class="border" ></canvas>
   <script src="game.js" charset="utf-8"></script>
 
   </body>

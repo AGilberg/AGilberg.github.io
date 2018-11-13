@@ -1,5 +1,12 @@
 /* CSS for hovedsiden og meny--------------- */
+
+@font-face {
+    font-family: zorque;
+    src: url(zorque/zorque.ttf);
+}
+
 #meny {
+    font-family: zorque;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -32,6 +39,16 @@ li a:hover {
 
 .active {
     background-color: rgb(255, 230, 179);
+}
+
+#gameTitle {
+  margin: auto;
+  width: 720px;
+  background-color: rgb(191, 35, 45);
+  text-align: center;
+  font-family: zorque;
+  font-size: 60px;
+
 }
 /* ------------------------------------------- */
 
@@ -99,8 +116,8 @@ h2 {
 
 
 #div1, #div2 {
-  padding-right: 180px;
-  padding-left: 180px;
+  width: 720px;
+  margin: auto;
 }
 
 
@@ -170,7 +187,7 @@ select {
 
 
 /* --------------------- Våre lokaler sin css ---- */
-/* Her har vi prøvd oss litt med flex! */
+/* Her har vi prøvd oss litt med flexbox */
 .bildeGMYR {
   display: flex;
   flex-direction: row;
