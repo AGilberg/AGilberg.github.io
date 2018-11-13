@@ -4,15 +4,36 @@ var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
 );
 if (mobile) {
   document.body.innerHTML =
-    '<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=no"/>' +
+    //'<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=no"/>' +
     "<br>" +
-    '<canvas id="canvas" width="720" height="480"></canvas>';
+    '<canvas id="canvas" width="720" height="480"></canvas>' +
+    "<br>" +
+    '<center><button type="button" id="showCanvas" style="width: 100px; height:50px" onclick="goFullScreen()">Fullscreen</button></center>';
   document.styleSheets[0].disabled = true;
+}
+function goFullScreen() {
+  if (!mobile) {
+    document.getElementById("showCanvas").style.visibility = "hidden";
+    canvas.style.visibility = "visible";
+  } else {
+    if (window.innerHeight < window.innerWidth) {
+      if (canvas.requestFullScreen) canvas.requestFullScreen();
+      else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
+      else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
+      screen.orientation.lock("landscape-primary");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.style.visibility = "visible";
+    } else {
+      alert("Please enter landscape mode");
+    }
+  }
 }
 
 // Canvas:
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+canvas.style.visibility = "hidden";
 ctx.font = "25px Arial";
 
 // Karakter:
@@ -144,14 +165,14 @@ class SpriteAnimationConstructor {
   }
   //"oppdaterer" hvilken sprite fra spritesheet som skal bli brukt i hovedkarakter animasjonen
   updateIndex() {
-    if (counter == 3 && death == false) {
+    if (counter == 3 && !death) {
       curFrame = (curFrame + 1) % this.frameCount;
       counter = 0;
-    } else if (counter == 10 && death == true) {
+    } else if (counter == 10 && death) {
       curFrame = (curFrame + 1) % this.frameCount;
       counter = 0;
     } else {
-      if (death == false || curFrame <= 8) {
+      if (!death || curFrame <= 8) {
         counter++;
       }
     }
@@ -162,7 +183,7 @@ class SpriteAnimationConstructor {
 
   //Tegner shuriken hvis throwing == true, og endrer posisjonen.
   drawShuriken() {
-    if (throwing == true) {
+    if (throwing) {
       posShuriken += velocityShuriken;
       if (posShuriken < 0) {
         throwing = false;
@@ -214,7 +235,7 @@ class SpriteAnimationConstructor {
     for (var arrays in enemiesContainer.samuraiLeft) {
       if (
         testmath == parseInt(arrays) &&
-        enemiesContainer.samuraiLeft[arrays] == false
+        !enemiesContainer.samuraiLeft[arrays]
       ) {
         enemiesContainer.samuraiLeft[arrays] = true;
         enemiesSpeed += 0.1;
@@ -239,7 +260,7 @@ class SpriteAnimationConstructor {
   drawEnemy() {
     srcXenemies = this.updateEnemySprite();
     for (var arrays in enemiesContainer.samuraiLeft) {
-      if (enemiesContainer.samuraiLeft[arrays] == true) {
+      if (enemiesContainer.samuraiLeft[arrays]) {
         posXenemies[arrays] += dxEnemies[arrays];
         //despawner enemies hvis de går ut av canvas
         if (dxEnemies[arrays] < 0) {
@@ -266,7 +287,7 @@ class SpriteAnimationConstructor {
         if (
           posXenemies[arrays] > posShuriken - positionModifier &&
           posXenemies[arrays] < posShuriken - positionModifier + 30 &&
-          throwing == true &&
+          throwing &&
           posYShuriken > groundLevel - 20
         ) {
           enemiesContainer.samuraiLeft[arrays] = false;
@@ -406,16 +427,12 @@ const startGame = new menuBoxConstructor(223, 395, 64, 98);
 const backButton = new menuBoxConstructor(0, 50, 0, 50);
 
 canvas.addEventListener("click", function(event) {
-  var muteX = 660;
+  var muteX = canvas.width - 60;
   var muteY = 45;
   var rect = canvas.getBoundingClientRect();
 
   //skrur lyden av og på hvis man trykker på lyd knappen
-  if (
-    event.x - rect.left > muteX &&
-    event.y - rect.top < muteY &&
-    game == true
-  ) {
+  if (event.x - rect.left > muteX && event.y - rect.top < muteY && game) {
     // Executes if button was clicked!
     if (audioCounter % 2 == 0) {
       audio.play();
@@ -430,7 +447,7 @@ canvas.addEventListener("click", function(event) {
 
   //kode for spilling på mobil
   if (mobile) {
-    if (game) {
+    if (game && !death) {
       if (event.y - rect.top < 240) {
         if (dy == 0) {
           dy += 30;
@@ -479,7 +496,7 @@ canvas.addEventListener("click", function(event) {
     menu = false;
     credits = true;
   }
-  if (clicked(backButton, false) && gameOver == false) {
+  if (clicked(backButton, false) && !gameOver) {
     returnToMenu();
   }
 });
@@ -515,23 +532,23 @@ canvas.addEventListener("mousemove", function(event) {
 
 //finner rett animasjon ift. bevegelse, og kjører dem via animasjonsklassen øverst.
 function findAnimation() {
-  if (death == true) {
+  if (death) {
     deathAnimationSprite.animateMainChar();
   } else if (
-    (!move.left && !move.right && dy == 0 && lastRight == true) ||
-    (move.left && move.right && dy == 0 && lastRight == true)
+    (!move.left && !move.right && dy == 0 && lastRight) ||
+    (move.left && move.right && dy == 0 && lastRight)
   ) {
     idleRSprite.animateMainChar();
   } else if (
-    (!move.left && !move.right && dy == 0 && lastRight == false) ||
-    (move.left && move.right && dy == 0 && lastRight == false)
+    (!move.left && !move.right && dy == 0 && !lastRight) ||
+    (move.left && move.right && dy == 0 && !lastRight)
   ) {
     idleLSprite.animateMainChar();
   } else if (move.left && posY >= groundLevel) {
     runLeftSprite.animateMainChar();
   } else if (move.right && posY >= groundLevel) {
     runRightSprite.animateMainChar();
-  } else if (posY < groundLevel && lastRight == false) {
+  } else if (posY < groundLevel && !lastRight) {
     midJumpLeftSprite.animateMainChar();
   } else {
     midJumpRightSprite.animateMainChar();
@@ -539,7 +556,7 @@ function findAnimation() {
 }
 
 function drawSound() {
-  ctx.drawImage(imageSound, 0, 0, 512, 512, 665, 0, 50, 50);
+  ctx.drawImage(imageSound, 0, 0, 512, 512, canvas.width - 55, 0, 50, 50);
 }
 function drawBackButton() {
   ctx.drawImage(imageBack, 0, 0, 512, 512, 9, 5, 40, 40);
@@ -554,14 +571,14 @@ function throwShuriken() {
 
 //Gjør at hovedpersonen dør
 function charDeath() {
-  if (death == false) {
+  if (!death) {
     curFrame = 0;
     counter = 0;
     death = true;
     enemiesSpeed = 2;
     spawntimer = 1200;
     setTimeout(() => {
-      if (death == true) {
+      if (death) {
         gameOver = true;
       }
     }, 3000);
@@ -586,8 +603,8 @@ function returnToMenu() {
 
 //teller hvor mange sekunder man har vært i spillet
 setInterval(() => {
-  if (game == true) {
-    if (death == false) {
+  if (game) {
+    if (!death) {
       timePassed++;
     }
   } else {
@@ -597,7 +614,7 @@ setInterval(() => {
 
 //spawner arrows hvert andre sekund
 setInterval(() => {
-  if (game == true && score > 20) {
+  if (game && score > 20) {
     arrowX = Math.floor(Math.random() * 700);
     arrowY = -50;
   }
@@ -605,15 +622,17 @@ setInterval(() => {
 
 //tegner arrows + hitbox
 function drawArrow() {
-  arrowY += 4;
-  ctx.drawImage(arrow, arrowX, arrowY, 20, 50);
-  if (
-    arrowY > posY - 40 &&
-    arrowY < posY + 70 &&
-    arrowX > posX + 20 &&
-    arrowX < posX + 40
-  ) {
-    charDeath();
+  if (!mobile) {
+    arrowY += 4;
+    ctx.drawImage(arrow, arrowX, arrowY, 20, 50);
+    if (
+      arrowY > posY - 40 &&
+      arrowY < posY + 70 &&
+      arrowX > posX + 20 &&
+      arrowX < posX + 40
+    ) {
+      charDeath();
+    }
   }
 }
 
@@ -634,8 +653,8 @@ move = {
       case 38: // opp tast
         //dobbelhopp, endre linje3 senere for bedre verdi
         let skyLevel = posY;
-        if (upReleased == true) {
-          if (doubleJump == false) {
+        if (upReleased) {
+          if (!doubleJump) {
             dy += 18 - skyLevel / 100; // 15
             doubleJump = true;
           }
@@ -648,12 +667,12 @@ move = {
         break;
       case 32: // spacebar tast
         move.space = key_state;
-        if (gameOver == true) {
+        if (gameOver) {
           returnToMenu();
         }
         break;
       case 13: //enter tast
-        if (game == false) {
+        if (!game) {
           if (menuCounter == 0) {
             posX = canvas.width / 2;
             posY = groundLevel;
@@ -682,13 +701,13 @@ moveMenu = {
     var key_state = event.type == "keyup" ? true : false;
     switch (event.keyCode) {
       case 38:
-        if (game == false) {
+        if (!game) {
           menuCounter--;
           if (menuCounter == -1) {
             menuCounter = 2;
           }
         }
-        if (game == true) {
+        if (game) {
           upReleased = true;
         }
         break;
@@ -704,7 +723,7 @@ moveMenu = {
 
 //funksjon som tar seg av bevegelse, i forhold til tastetrykkene.
 function moveChar() {
-  if (death == false) {
+  if (!death) {
     //hopping
     if (move.up) {
       if (dy == 0) {
@@ -724,7 +743,7 @@ function moveChar() {
       lastRight = true;
     }
     //kaster shuriken
-    if (move.space && throwing == false) {
+    if (move.space && !throwing) {
       if (lastRight) {
         velocityShuriken = 10;
       } else {
@@ -760,7 +779,7 @@ function moveChar() {
 //hoved gameloop funksjonen
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (game == true) {
+  if (game) {
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     findAnimation();
     drawSound();
@@ -769,7 +788,7 @@ function draw() {
     enemySprite.chooseEnemy();
     moveChar();
     drawArrow();
-    if (gameOver == false) {
+    if (!gameOver) {
       ctx.fillText(
         "You have defeated " +
           score +
@@ -791,13 +810,13 @@ function draw() {
         200
       );
     }
-  } else if (menu == true) {
+  } else if (menu) {
     menuDraw();
     startMenuSprite.animateMainChar();
-  } else if (instructions == true) {
+  } else if (instructions) {
     instructionsDraw();
     drawBackButton();
-  } else if (credits == true) {
+  } else if (credits) {
     creditsDraw();
     drawBackButton();
   }
