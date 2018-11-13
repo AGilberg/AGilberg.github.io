@@ -1,4 +1,4 @@
-function fornavn() {
+function validering() {
   let fnavn = document.getElementById("label1").value;
   let enavn = document.getElementById("label2").value;
   let kommentar = document.getElementById("label5").value;
@@ -52,7 +52,7 @@ function knappTrykk() {
     alert("Takk for din hendvendelse");
   } else {
     alert(
-      'Du må fylle ut alle feltene! "Navn", "Fornavn", "E-mail" og "Kommentar"'
+      'Har du husket å fylle ut alle feltene?  "Fornavn", "Etternavn", "E-mail" og "Kommentar"'
     );
   }
 }
