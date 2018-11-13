@@ -417,7 +417,7 @@ class menuBoxConstructor {
   }
 }
 
-const historyBox = new menuBoxConstructor(240, 367, 167, 194);
+const historyBox = new menuBoxConstructor(230, 377, 167, 194);
 const instructionsBox = new menuBoxConstructor(210, 410, 117, 147);
 const startGame = new menuBoxConstructor(223, 395, 64, 98);
 const backButton = new menuBoxConstructor(0, 50, 0, 50);
@@ -791,7 +791,7 @@ function draw() {
           " samurai, in " +
           timePassed +
           " seconds",
-        120,
+        40,
         90
       );
     } else {
@@ -799,12 +799,12 @@ function draw() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#FFFFFF";
       ctx.fillText("GAME OVER", 275, 150);
-      ctx.fillText("Press spacebar to return to the menu", 150, 250);
       ctx.fillText(
         "samurai defeated: " + score + ", time: " + timePassed,
-        200,
+        148,
         200
       );
+      ctx.fillText("Press spacebar to return to the menu", 67, 250);
     }
   } else if (menu) {
     menuDraw();
@@ -825,12 +825,12 @@ function draw() {
 function menuDraw() {
   ctx.fillStyle = "#000000";
   ctx.font = "25px freedom";
-  ctx.fillText("START GAME", 230, 90);
-  ctx.fillText("INSTRUCTIONS", 215, 140);
+  ctx.fillText("START GAME", 212, 90);
+  ctx.fillText("INSTRUCTIONS", 214, 140);
   ctx.fillText("HISTORY", 252, 190);
 
   if (menuCounter == 0) {
-    posX = 390;
+    posX = 400;
     posY = 55;
   } else if (menuCounter == 1) {
     posX = 406;
@@ -856,7 +856,7 @@ function historyDraw() {
   ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.stroke();
   ctx.fillStyle = "#000000";
-  ctx.font = "15px freedom";
+  ctx.font = "15px arial";
   ctx.fillText(
     "På tidlig 1400-tallet i Japan var det en tung tid for folk som levde i den laveste klassen.",
     70,
