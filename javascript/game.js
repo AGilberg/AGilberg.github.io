@@ -4,12 +4,13 @@ var mobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(
 );
 if (mobile) {
   document.body.innerHTML =
-    //'<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=no"/>' +
+    "<br>" +
+    '<center><button type="button" id="showCanvas" style="width: 200px; height: 100px;" onclick="goFullScreen()">Fullscreen</button></center>' +
     "<br>" +
     '<canvas id="canvas" width="720" height="480"></canvas>' +
     "<br>" +
-    '<center><button type="button" id="showCanvas" class="button" onclick="goFullScreen()">Fullscreen</button></center>' +
-    '<link rel="stylesheet" href="css/styles.css">';
+    "<br>" +
+    "<br>";
   document.styleSheets[0].disabled = true;
 }
 //kode for fullskjerm på mobil
@@ -19,9 +20,9 @@ function goFullScreen() {
     else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
     else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
     screen.orientation.lock("landscape-primary");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
     canvas.style.visibility = "visible";
+    canvas.width = window.innerWidth;
+    // canvas.height = window.innerHeight;
   } else {
     alert("Please enter landscape mode");
   }
@@ -504,11 +505,6 @@ canvas.addEventListener("click", function(event) {
   }
 });
 
-// canvas.addEventListener("ontouchend", function(event) {
-//   move.left = false;
-//   move.right = false;
-// });
-
 canvas.addEventListener("mousemove", function(event) {
   var rect = canvas.getBoundingClientRect();
 
@@ -559,7 +555,9 @@ function findAnimation() {
 }
 
 function drawSound() {
-  ctx.drawImage(imageSound, 0, 0, 512, 512, canvas.width - 55, 0, 50, 50);
+  if (!mobile) {
+    ctx.drawImage(imageSound, 0, 0, 512, 512, canvas.width - 55, 0, 50, 50);
+  }
 }
 function drawBackButton() {
   ctx.drawImage(imageBack, 0, 0, 512, 512, 9, 5, 40, 40);
@@ -824,7 +822,6 @@ function draw() {
     historyDraw();
     drawBackButton();
   }
-
   requestAnimationFrame(draw);
 }
 
@@ -855,7 +852,7 @@ function instructionsDraw() {
 
 //history funksjonen
 function historyDraw() {
-  ctx.fillStyle = "#FFBD9E";
+  ctx.fillStyle = "#FFCC9E";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.stroke();
@@ -896,13 +893,33 @@ function historyDraw() {
 document.addEventListener("keydown", move.keyListener);
 document.addEventListener("keyup", move.keyListener);
 document.addEventListener("keyup", moveMenu.keyListener);
+//forhindrer scrolling med piltaster
 document.addEventListener(
   "keydown",
   function(e) {
-    // space and arrow keys, prevent scrolling
+    // stopper scrolling på nettsiden med space og arrow tastene
     if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
       e.preventDefault();
     }
   },
   false
 );
+
+//kode for mobile enheter, kjøres når man forlater fullskjerm
+if (document.addEventListener) {
+  document.addEventListener("webkitfullscreenchange", exitHandler, false);
+  document.addEventListener("mozfullscreenchange", exitHandler, false);
+  document.addEventListener("fullscreenchange", exitHandler, false);
+  document.addEventListener("MSFullscreenChange", exitHandler, false);
+}
+
+function exitHandler() {
+  if (
+    document.webkitIsFullScreen === false ||
+    document.mozFullScreen === false ||
+    document.msFullscreenElement === false
+  ) {
+    canvas.style.visibility = "hidden";
+    returnToMenu();
+  }
+}
