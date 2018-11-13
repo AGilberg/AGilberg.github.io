@@ -89,6 +89,8 @@ var counter = 0; //variabel som blir brukt for telling i animasjonsfunksjon
 var srcX = 0; //variabel som definerer hvor på spritesheeten man starter å "klippe"
 
 // Audio og sprites/grafikk:
+var enemyBoop = new Audio();
+enemyBoop.src = "sound/boop.wav";
 var audio = new Audio();
 audio.src = "sound/sakura.mp3";
 var shuriken = new Image();
@@ -127,6 +129,8 @@ enemyLeft.src = "img/enemyLeft.png";
 var direction = new Image();
 var arrow = new Image();
 arrow.src = "img/arrow.png";
+var howToPlay = new Image();
+howToPlay.src = "img/howToPlay.png";
 
 //Class hvor man sender inn informasjon om sprites som skal bli tegnet, og funksjoner for å tegne dem.
 class SpriteAnimationConstructor {
@@ -290,6 +294,8 @@ class SpriteAnimationConstructor {
           enemiesContainer.samuraiLeft[arrays] = false;
           throwing = false;
           score++;
+          enemyBoop.currentTime = 0;
+          enemyBoop.play();
         }
 
         ctx.drawImage(
@@ -844,10 +850,7 @@ function menuDraw() {
 
 //instructions funksjonen
 function instructionsDraw() {
-  ctx.fillStyle = "#FFFFFF";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.rect(0, 0, canvas.width, canvas.height);
-  ctx.stroke();
+  ctx.drawImage(howToPlay, 0, 0, 720, 480);
 }
 
 //history funksjonen
