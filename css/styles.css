@@ -18,6 +18,7 @@
 }
 
 li {
+  /* denne kodedelen hører til listen som er i menyen */
   float: left;
   border-right: 3px solid black;
 }
@@ -41,6 +42,7 @@ li a:hover {
 }
 
 #gameTitle {
+  /* dette er koden til spill-nanvet*/
   margin: auto;
   width: 720px;
   background-color: rgb(191, 35, 45);
@@ -67,6 +69,7 @@ html {
   text-align: center;
 }
 
+/* her har vi koden til inputboksene og deres utforming */
 input[type="text"],
 input[type="email"],
 input[type="textarea"] {
@@ -78,7 +81,7 @@ input[type="textarea"] {
   border-color: rgb(102, 102, 51);
   border-width: thick;
 }
-
+/* dette er koden til 'navn', 'etternavn' osv. Dette efinerer hvodan de skal se ut */
 label {
   border-style: double;
   font-style: oblique;
@@ -93,12 +96,14 @@ label {
 }
 
 h2 {
+  /* Overskriften på 'kontakt oss siden' */
   text-align: center;
   font-style: oblique;
   font-size: 35px;
 }
 
 .border {
+  /* Dette er den generelle koden vi bruker til rammer */
   border-style: groove;
   border-color: rgb(102, 102, 51);
   border-width: thick;
@@ -114,6 +119,7 @@ h2 {
 }
 
 textarea {
+  /* Koden for hvordan tekstfeltet skal være definert. Krevde en egen CSS del */
   width: 40%;
   height: 140px;
   padding: 9px 10px;
@@ -125,6 +131,7 @@ textarea {
 }
 
 select {
+  /* Definerer utformingen til valg-listen */
   padding: 7px 8px;
   margin: 8px 0;
   box-sizing: border-box;
@@ -134,6 +141,7 @@ select {
 }
 
 .button {
+  /* Disse kodelinjene beskriver knappen nederst på siden */
   background-color: rgb(255, 230, 179);
   color: Black;
   padding: 16px 32px;
@@ -159,6 +167,7 @@ select {
   text-align: center;
 }
 
+/* Her blir de rød og grønne bildene definer slik at de ligge på siden av inputboksene */
 #for_sjekk,
 #etter_sjekk,
 #email_sjekk {
@@ -173,11 +182,16 @@ select {
 }
 
 #showCanvas {
+  /* Knapp slik at mobilbrukere kan kunne spille */
   width: 100px;
   height: 40px;
 }
 
+/* ---------------------------------------- */
+/* Dette er CSS for dokumentasjon siden */
+
 .video {
+  /* Videone får definert plasseringen sin her ved hjelp av flex */
   display: flex;
   flex-flow: wrap;
   justify-content: space-evenly;
@@ -200,8 +214,8 @@ video {
 
 /* ----------------------------------------------- */
 
-/* --------------------- Våre lokaler sin css ---- */
-/* Her har vi prøvd oss litt med flexbox */
+/* --------------------- Finn oss sin css ---- */
+/* Her har vi igjen prøvd oss litt med flexbox */
 .bildeGMYR {
   display: flex;
   flex-direction: row;
