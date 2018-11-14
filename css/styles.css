@@ -176,6 +176,28 @@ select {
   width: 100px;
   height: 40px;
 }
+
+.video {
+  display: flex;
+  flex-flow: wrap;
+  justify-content: space-evenly;
+}
+
+#videoLabel {
+  padding-top: 70px;
+  flex-wrap: 1;
+}
+
+video {
+  flex-wrap: 1;
+  padding-top: 30px;
+}
+
+.videoLabel {
+  width: 280px;
+  text-align: center;
+}
+
 /* ----------------------------------------------- */
 
 /* --------------------- Våre lokaler sin css ---- */

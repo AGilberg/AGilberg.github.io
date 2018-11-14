@@ -1,4 +1,4 @@
-// Mobil sjekk: (fullscreen funker bare på android telefoner)
+// Mobil sjekk: (fullscreen funker bare på android telefoner, da iphone ikke gir tilgang til requestFullScreen()) Anbefaler å prøve ut spillet på en android telefon, da vi føler dette er en veldig bra spillopplevelse (med unntak av menynavigeringen som ikke er helt nøyaktig)
 var mobile = /android|blackberry|mini|windows\sce|palm/i.test(
   navigator.userAgent.toLowerCase()
 );
@@ -7,6 +7,9 @@ var iphone = /iphone|ipad|ipod|palm/i.test(navigator.userAgent.toLowerCase());
 
 if (mobile || iphone) {
   document.body.innerHTML =
+    "<br>" +
+    "<center> <p> Mobile just includes the game, not the website. For a full experience, visit us on desktop. </p> </center>" +
+    "<center> <p> Click the button below to play the game! </p> </center>" +
     "<br>" +
     '<center><button type="button" id="showCanvas" style="width: 200px; height: 100px;" onclick="goFullScreen()">Fullscreen</button></center>' +
     "<br>" +
